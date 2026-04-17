@@ -1,0 +1,6 @@
+fullName,password,confirmPassword,email,phone,agreedToTerms,expectedStatus,expectedMessage
+RenterA,ValidPass@1,ValidPass@1,renterA@gmail.com,0905123123,true,SUCCESS,Đăng ký thành công
+RenterB,ValidPass@1,ValidPass@1,existing@gmail.com,0905123124,true,FAIL,Email đã tồn tại
+RenterC,ValidPass@1,ValidPass@1,renterC@gmail.com,0905123125,true,FAIL,Số điện thoại đã tồn tại
+RenterD,ValidPass@1,WrongPass@1,renterD@gmail.com,0905123126,true,FAIL,Mật khẩu và xác nhận mật khẩu không khớp
+RenterE,ValidPass@1,ValidPass@1,renterE@gmail.com,0905123127,false,FAIL,Bạn phải đồng ý với các điều khoản dịch vụ

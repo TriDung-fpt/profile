@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Future - Hệ thống Thuê xe Điện</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-light: #d1fae5;
+            --secondary: #6b7280;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --light: #f9fafb;
+            --dark: #111827;
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background: var(--bg);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            color: white;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Views */
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-info {
+            background: var(--info);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 0.75rem;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        /* Search Panel */
+        .search-panel {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .search-panel h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .search-panel .form-control {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .search-panel label {
+            color: white;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Model Card */
+        .model-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .model-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .model-card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .model-card-body {
+            padding: 1.5rem;
+        }
+
+        .model-card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--dark);
+        }
+
+        .model-specs {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        .model-specs span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .model-price {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .model-price small {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .model-available {
+            color: var(--success);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* Vehicle Card */
+        .vehicle-card {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1.25rem;
+            border: 2px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .vehicle-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+        }
+
+        .vehicle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .vehicle-plate {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-success {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--secondary);
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .modal-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--light);
+            font-weight: 700;
+            color: var(--dark);
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background: var(--light);
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 10001;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 300px;
+            animation: slideInRight 0.3s ease;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast-error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .toast-warning {
+            border-left: 4px solid var(--warning);
+        }
+
+        .toast-info {
+            border-left: 4px solid var(--info);
+        }
+
+        .toast i {
+            font-size: 1.25rem;
+        }
+
+        .toast-success i {
+            color: var(--success);
+        }
+
+        .toast-error i {
+            color: var(--danger);
+        }
+
+        .toast-warning i {
+            color: var(--warning);
+        }
+
+        .toast-info i {
+            color: var(--info);
+        }
+
+        /* Stats Card */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--secondary);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header-content {
+                padding: 1rem;
+            }
+
+            .search-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-charging-station"></i>
+                <span>Green Future</span>
+            </div>
+            <div class="user-section">
+                <div class="user-info" id="user-info" style="display: none;"></div>
+                <button class="btn btn-sm btn-secondary" id="logout-btn" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Auth View -->
+        <div id="auth-view" class="view active">
+            <div class="grid grid-2">
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-sign-in-alt"></i> Đăng nhập</h2>
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Email hoặc Số điện thoại</label>
+                            <input type="text" class="form-control" id="login-identifier" required placeholder="Nhập email hoặc số điện thoại">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> Mật khẩu</label>
+                            <input type="password" class="form-control" id="login-password" required placeholder="Nhập mật khẩu">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                        </button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-user-plus"></i> Đăng ký</h2>
+                    <form id="register-form">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Họ và tên</label>
+                            <input type="text" class="form-control" id="reg-fullName" required placeholder="Nhập họ và tên">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-envelope"></i> Email</label>
+                            <input type="email" class="form-control" id="reg-email" required placeholder="Nhập email">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-phone"></i> Số điện thoại</label>
+                            <input type="tel" class="form-control" id="reg-phone" required placeholder="Nhập số điện thoại">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> Mật khẩu</label>
+                            <input type="password" class="form-control" id="reg-password" required placeholder="Nhập mật khẩu">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> Xác nhận mật khẩu</label>
+                            <input type="password" class="form-control" id="reg-confirmPassword" required placeholder="Nhập lại mật khẩu">
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" id="reg-agreedToTerms" required>
+                                <span>Tôi đồng ý với điều khoản dịch vụ</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-user-plus"></i> Đăng ký
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Renter View -->
+        <div id="renter-view" class="view">
+            <!-- Page 1: Chọn trạm -->
+            <div class="card" id="page-select-station">
+                <h2 class="card-title"><i class="fas fa-map-marker-alt"></i> Chọn trạm xe điện</h2>
+                <div class="form-group">
+                    <label>Chọn trạm bạn muốn thuê xe</label>
+                    <select class="form-control" id="station-select" style="font-size: 1.1rem; padding: 1rem;">
+                        <option value="">-- Vui lòng chọn tr���m --</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Page 2: Xem models và lọc (Ẩn ban đầu) -->
+            <div class="card" id="page-models" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 class="card-title" style="margin-bottom: 0;"><i class="fas fa-car-side"></i> Danh sách xe</h2>
+                    <button class="btn btn-secondary btn-sm" onclick="backToStationSelection()">
+                        <i class="fas fa-arrow-left"></i> Chọn lại trạm
+                    </button>
+                </div>
+
+                <div class="search-panel">
+                    <h3><i class="fas fa-filter"></i> Bộ lọc tìm kiếm</h3>
+                    <form id="search-form">
+                        <input type="hidden" id="selected-station-id" value="">
+                        <div class="search-grid">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label>Trạm đã chọn</label>
+                                <input type="text" class="form-control" id="selected-station-name" readonly style="background: #f0f0f0;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label>Ngày giờ nhận xe *</label>
+                                <input type="datetime-local" class="form-control" id="filter-start-time" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label>Ngày giờ trả xe *</label>
+                                <input type="datetime-local" class="form-control" id="filter-end-time" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label>Giá tối thiểu (VNĐ/giờ)</label>
+                                <input type="number" class="form-control" id="filter-min-price" placeholder="0">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label>Giá tối đa (VNĐ/giờ)</label>
+                                <input type="number" class="form-control" id="filter-max-price" placeholder="1000000">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label>Số chỗ ngồi</label>
+                                <select class="form-control" id="filter-seat-count">
+                                    <option value="">Tất cả</option>
+                                    <option value="2">2 chỗ</option>
+                                    <option value="4">4 chỗ</option>
+                                    <option value="5">5 chỗ</option>
+                                    <option value="7">7 chỗ</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-success" style="align-self: end;">
+                                <i class="fas fa-search"></i> Tìm kiếm xe
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="models-container">
+                    <h3 style="margin-bottom: 1.5rem; font-size: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-car-side"></i>
+                        <span id="models-title">Tất cả xe của trạm</span>
+                    </h3>
+                    <div id="models-list" class="grid grid-3">
+                        <div class="empty-state">
+                            <i class="fas fa-hourglass-half"></i>
+                            <p>Đang tải danh sách xe...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Bookings -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-history"></i> Lịch sử đặt xe của tôi</h2>
+                <div id="my-bookings-container" class="table-container">
+                    <p style="padding: 2rem; text-align: center; color: var(--secondary);">Đang tải...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Staff View -->
+        <div id="staff-view" class="view">
+            <!-- Dashboard Stats -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-chart-line"></i> Dashboard</h2>
+                <h3 id="staff-station-name" style="color: var(--secondary); font-weight: 500; margin-bottom: 1.5rem;">Đang tải...</h3>
+                <div id="stats-container" class="stats-grid">
+                    <p>Đang tải thống kê...</p>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-bolt"></i> Tra cứu nhanh</h2>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="openModal('bookings-modal'); loadStaffBookings();">
+                        <i class="fas fa-list"></i> Danh sách Bookings
+                    </button>
+                    <button class="btn btn-secondary" onclick="openModal('contracts-modal'); loadStaffContracts();">
+                        <i class="fas fa-file-contract"></i> Danh sách Hợp đồng
+                    </button>
+                    <button class="btn btn-info" onclick="openModal('invoices-modal'); loadStaffInvoices();">
+                        <i class="fas fa-file-invoice"></i> Danh sách Hóa đơn
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model Detail Modal -->
+    <div id="model-detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('model-detail-modal')">&times;</span>
+            <h2 class="modal-title" id="modal-model-title">Chi tiết Model</h2>
+            <div id="modal-model-body"></div>
+        </div>
+    </div>
+
+    <!-- Booking Confirm Modal -->
+    <div id="booking-confirm-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="modal-close" onclick="closeModal('booking-confirm-modal')">&times;</span>
+            <h2 class="modal-title"><i class="fas fa-check-circle"></i> Xác nhận đặt xe</h2>
+            <form id="booking-form">
+                <input type="hidden" id="booking-vehicle-id">
+                <div id="booking-summary" style="background: var(--light); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;"></div>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" required>
+                        <span>Tôi đồng ý với điều khoản dịch vụ</span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-success" style="width: 100%;">
+                    <i class="fas fa-check-circle"></i> Xác nhận đặt xe
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bookings Modal (Staff) -->
+    <div id="bookings-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('bookings-modal')">&times;</span>
+            <h2 class="modal-title"><i class="fas fa-list"></i> Danh sách Bookings</h2>
+            <div id="bookings-list-container" class="table-container">
+                <p style="padding: 2rem; text-align: center;">Đang tải...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contracts Modal (Staff) -->
+    <div id="contracts-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('contracts-modal')">&times;</span>
+            <h2 class="modal-title"><i class="fas fa-file-contract"></i> Danh sách Hợp đồng</h2>
+            <div id="contracts-list-container" class="table-container">
+                <p style="padding: 2rem; text-align: center;">Đang tải...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoices Modal (Staff) -->
+    <div id="invoices-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('invoices-modal')">&times;</span>
+            <h2 class="modal-title"><i class="fas fa-file-invoice"></i> Danh sách Hóa đơn</h2>
+            <div id="invoices-list-container" class="table-container">
+                <p style="padding: 2rem; text-align: center;">Đang tải...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>

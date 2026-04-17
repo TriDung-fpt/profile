@@ -1,0 +1,32 @@
+# Thiết lập kiểu xuống dòng cho tất cả file text
+* text=auto
+
+# File Java, properties, XML luôn dùng LF trong repository
+*.java text eol=lf
+*.xml text eol=lf
+*.properties text eol=lf
+
+# Script shell dùng LF
+*.sh text eol=lf
+
+# Script Windows dùng CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Các file nhị phân không đổi
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.jar binary
+*.war binary
+*.zip binary
+*.exe binary
+
+# Maven wrapper
+.mvn/wrapper/* text eol=lf
+
+# Git ignore
+.gitattributes text eol=lf
+.gitignore text eol=lf

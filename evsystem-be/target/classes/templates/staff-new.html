@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Rental System - Test Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --primary-color: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary-color: #6b7280;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #06b6d4;
+            --light-color: #f9fafb;
+            --dark-color: #1f2937;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+            --font-family: 'Be Vietnam Pro', sans-serif;
+            --border-radius: 12px;
+            --border-radius-sm: 8px;
+            --box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            padding: 20px 0;
+            box-shadow: var(--box-shadow-lg);
+            margin-bottom: 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header .logo i {
+            font-size: 2rem;
+        }
+
+        #nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #user-info {
+            color: white;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--box-shadow-lg);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.85rem;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #4b5563;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #059669;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .btn-info {
+            background-color: var(--info-color);
+            color: white;
+        }
+
+        /* View Management */
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section Card Styles */
+        .section-card {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 12px;
+            display: inline-block;
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem 0;
+            color: var(--dark-color);
+        }
+
+        /* Grid Layouts */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        @media (max-width: 1024px) {
+            .grid-3, .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: var(--font-family);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .form-check input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* Filter Panel */
+        .filter-panel {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            color: white;
+            box-shadow: var(--box-shadow-lg);
+        }
+
+        .filter-panel .section-title {
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        @media (max-width: 1200px) {
+            .filter-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .filter-panel .form-control {
+            background: white;
+        }
+
+        .filter-panel label {
+            color: white;
+            font-weight: 500;
+        }
+
+        /* Model/Vehicle Card Styles */
+        .model-card, .vehicle-card {
+            background-color: white;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .model-card:hover, .vehicle-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--box-shadow-lg);
+            border-color: var(--primary-color);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            margin: 0 0 0.5rem 0;
+            color: var(--dark-color);
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .card-description {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            min-height: 44px;
+        }
+
+        .card-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--danger-color);
+            margin: 1rem 0;
+        }
+
+        .card-price small {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        .card-specs {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border-color);
+            gap: 8px;
+        }
+
+        .card-specs div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+        }
+
+        .card-specs i {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--success-color);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .vehicle-card {
+            position: relative;
+        }
+
+        .vehicle-card .card-actions {
+            margin-top: 1rem;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-PENDING { background-color: var(--warning-color); }
+        .status-CONFIRMED { background-color: var(--primary-color); }
+        .status-RENTING { background-color: var(--success-color); }
+        .status-COMPLETED { background-color: var(--secondary-color); }
+        .status-CANCELLED { background-color: var(--danger-color); }
+        .status-AVAILABLE { background-color: var(--success-color); }
+        .status-RESERVED { background-color: var(--info-color); }
+        .status-UNAVAILABLE { background-color: var(--danger-color); }
+
+        /* Toast Notification */
+        .toast-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: var(--border-radius-sm);
+            color: white;
+            font-weight: 600;
+            z-index: 10001;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            min-width: 300px;
+            box-shadow: var(--box-shadow-lg);
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast-notification.success {
+            background-color: var(--success-color);
+        }
+
+        .toast-notification.error {
+            background-color: var(--danger-color);
+        }
+
+        .toast-notification.warning {
+            background-color: var(--warning-color);
+        }
+
+        .toast-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0.8;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .toast-close-btn:hover {
+            opacity: 1;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 3% auto;
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 900px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            position: relative;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-content-sm {
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .close-modal {
+            color: var(--secondary-color);
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--danger-color);
+        }
+
+        .detail-modal-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        @media (max-width: 768px) {
+            .detail-modal-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .detail-modal-img {
+            width: 100%;
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--box-shadow);
+        }
+
+        .spec-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .spec-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .spec-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Table Styles */
+        .table-wrapper {
+            max-height: 500px;
+            overflow-y: auto;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--light-color);
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        tbody tr:hover {
+            background-color: var(--light-color);
+        }
+
+        /* Dashboard Stats */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--light-color) 0%, white 100%);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            border-left: 5px solid;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.95rem;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--secondary-color);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Verification Images */
+        .verification-image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .verification-image-item {
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            padding: 8px;
+            background-color: var(--light-color);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .verification-image-item:hover {
+            transform: scale(1.05);
+            border-color: var(--primary-color);
+        }
+
+        .verification-image-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .verification-image-item span {
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            margin-top: 8px;
+            display: block;
+            font-weight: 600;
+        }
+
+        /* Payment Info */
+        .payment-info {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius-sm);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: left;
+            font-size: 0.95rem;
+            border: 2px solid var(--border-color);
+        }
+
+        .payment-info p {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Available Vehicles Section */
+        .available-vehicles-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 3px solid var(--border-color);
+        }
+
+        .vehicle-list-container {
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-charging-station"></i>
+                <span>EV Rental System</span>
+            </div>
+            <div id="nav-right">
+                <span id="user-info" style="display: none;"></span>
+                <button id="logout-btn" class="btn btn-secondary btn-sm" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Auth View -->
+        <div id="auth-view" class="view active">
+            <div class="grid-container grid-2">
+                <div class="section-card">
+                    <h2 class="section-title">Đăng nhập</h2>
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label for="login-identifier"><i class="fas fa-user"></i> Email hoặc SĐT</label>
+                            <input type="text" id="login-identifier" class="form-control" required placeholder="Nhập email hoặc số điện thoại">
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password"><i class="fas fa-lock"></i> Mật khẩu</label>
+                            <input type="password" id="login-password" class="form-control" required placeholder="Nhập mật khẩu">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                        </button>
+                    </form>
+                </div>
+                <div class="section-card">
+                    <h2 class="section-title">Đăng ký</h2>
+                    <form id="register-form">
+                        <div class="form-group">
+                            <label for="reg-fullName"><i class="fas fa-user"></i> Họ và tên</label>
+                            <input type="text" id="reg-fullName" class="form-control" required placeholder="Nhập họ và tên">
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-email"><i class="fas fa-envelope"></i> Email</label>
+                            <input type="email" id="reg-email" class="form-control" required placeholder="Nhập email">
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-phone"><i class="fas fa-phone"></i> Số điện thoại</label>
+                            <input type="tel" id="reg-phone" class="form-control" required placeholder="Nhập số điện thoại">
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-password"><i class="fas fa-lock"></i> Mật khẩu</label>
+                            <input type="password" id="reg-password" class="form-control" required placeholder="Nhập mật khẩu">
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-confirmPassword"><i class="fas fa-lock"></i> Xác nhận Mật khẩu</label>
+                            <input type="password" id="reg-confirmPassword" class="form-control" required placeholder="Nhập lại mật khẩu">
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="reg-agreedToTerms" required>
+                            <label for="reg-agreedToTerms">Tôi đồng ý với các điều khoản dịch vụ</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-user-plus"></i> Đăng ký
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Renter View -->
+        <div id="renter-view" class="view">
+            <div class="section-card">
+                <h2 class="section-title"><i class="fas fa-user-circle"></i> Chào mừng bạn đến với hệ thống thuê xe điện</h2>
+                <p style="font-size: 1.1rem; color: var(--secondary-color);">Quản lý tài khoản, xác thực thông tin và đặt xe dễ dàng.</p>
+            </div>
+
+            <!-- Profile & Verification -->
+            <div class="section-card">
+                <h2 class="section-title"><i class="fas fa-id-card"></i> Hồ Sơ & Xác Thực</h2>
+                <div class="grid-container grid-2">
+                    <div>
+                        <h3 class="section-subtitle">Thông tin của bạn</h3>
+                        <div id="profile-details" style="background: var(--light-color); padding: 1.5rem; border-radius: var(--border-radius-sm);">Đang tải...</div>
+
+                        <h3 class="section-subtitle">Cập nhật thông tin</h3>
+                        <form id="update-profile-form">
+                            <div class="form-group">
+                                <label for="update-fullName">Họ và tên</label>
+                                <input type="text" id="update-fullName" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="update-phone">Số điện thoại</label>
+                                <input type="text" id="update-phone" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="update-cccd">Số CCCD</label>
+                                <input type="text" id="update-cccd" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="update-gplx">Số GPLX</label>
+                                <input type="text" id="update-gplx" class="form-control">
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Cập nhật
+                            </button>
+                        </form>
+                    </div>
+                    <div>
+                        <h3 class="section-subtitle">Trạng thái xác thực</h3>
+                        <div id="verification-status" style="background: var(--light-color); padding: 1.5rem; border-radius: var(--border-radius-sm); margin-bottom: 1.5rem;">Đang tải...</div>
+
+                        <h3 class="section-subtitle">Tải lên giấy tờ</h3>
+                        <form id="verification-upload-form">
+                            <div class="form-group">
+                                <label for="verify-cccd">Số CCCD</label>
+                                <input type="text" id="verify-cccd" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="verify-gplx">Số GPLX</label>
+                                <input type="text" id="verify-gplx" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cccdFile1">CCCD mặt trước</label>
+                                <input type="file" id="cccdFile1" class="form-control" required accept="image/*">
+                            </div>
+                            <div class="form-group">
+                                <label for="cccdFile2">CCCD mặt sau</label>
+                                <input type="file" id="cccdFile2" class="form-control" required accept="image/*">
+                            </div>
+                            <div class="form-group">
+                                <label for="gplxFile1">GPLX mặt trước</label>
+                                <input type="file" id="gplxFile1" class="form-control" required accept="image/*">
+                            </div>
+                            <div class="form-group">
+                                <label for="gplxFile2">GPLX mặt sau</label>
+                                <input type="file" id="gplxFile2" class="form-control" required accept="image/*">
+                            </div>
+                            <div class="form-group">
+                                <label for="selfieFile">Ảnh selfie</label>
+                                <input type="file" id="selfieFile" class="form-control" required accept="image/*">
+                            </div>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-upload"></i> Gửi yêu cầu xác thực
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Bookings -->
+            <div class="section-card">
+                <h2 class="section-title"><i class="fas fa-history"></i> Lịch sử đặt xe của tôi</h2>
+                <div id="my-bookings-list" class="table-wrapper"></div>
+            </div>
+
+            <!-- Vehicle Search & Booking -->
+            <div class="section-card">
+                <h2 class="section-title"><i class="fas fa-search"></i> Tìm kiếm và Đặt xe</h2>
+
+                <div class="filter-panel">
+                    <h3 style="color: white; margin-bottom: 1.5rem; font-size: 1.3rem;">
+                        <i class="fas fa-filter"></i> Bộ lọc tìm kiếm
+                    </h3>
+                    <form id="model-search-form">
+                        <div class="filter-grid">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="filter-station"><i class="fas fa-map-marker-alt"></i> Chọn trạm</label>
+                                <select id="filter-station" class="form-control" required>
+                                    <option value="">-- Chọn trạm --</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="filter-start-time"><i class="fas fa-calendar-check"></i> Ngày giờ nhận xe</label>
+                                <input type="datetime-local" id="filter-start-time" class="form-control" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="filter-end-time"><i class="fas fa-calendar-times"></i> Ngày giờ trả xe</label>
+                                <input type="datetime-local" id="filter-end-time" class="form-control" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="filter-min-price"><i class="fas fa-dollar-sign"></i> Giá tối thiểu</label>
+                                <input type="number" id="filter-min-price" class="form-control" placeholder="VNĐ/giờ">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="filter-max-price"><i class="fas fa-dollar-sign"></i> Giá tối đa</label>
+                                <input type="number" id="filter-max-price" class="form-control" placeholder="VNĐ/giờ">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="filter-seat-count"><i class="fas fa-users"></i> Số chỗ ngồi</label>
+                                <select id="filter-seat-count" class="form-control">
+                                    <option value="">Tất cả</option>
+                                    <option value="2">2 chỗ</option>
+                                    <option value="4">4 chỗ</option>
+                                    <option value="5">5 chỗ</option>
+                                    <option value="7">7 chỗ</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-success" style="height: fit-content;">
+                                <i class="fas fa-search"></i> Tìm kiếm
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="model-list-container" class="vehicle-list-container">
+                    <h3 class="section-subtitle"><i class="fas fa-car"></i> Danh sách Model xe</h3>
+                    <div id="model-list" class="grid-container">
+                        <p class="empty-state">Vui lòng chọn trạm và thời gian để tìm kiếm xe</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Staff View -->
+        <div id="staff-view" class="view">
+            <div class="section-card">
+                <div id="dashboard-header">
+                    <h2 class="section-title"><i class="fas fa-tachometer-alt"></i> Dashboard Vận hành</h2>
+                    <h3 id="dashboard-station-name" style="font-weight: 500; margin-bottom: 1.5rem; color: var(--secondary-color);">
+                        Đang tải...
+                    </h3>
+                </div>
+                <div id="dashboard-stats-container" class="dashboard-stats">
+                    <p>Đang tải dữ liệu...</p>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h2 class="section-title"><i class="fas fa-search-plus"></i> Tra cứu nhanh</h2>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button type="button" id="view-all-bookings-btn" class="btn btn-primary">
+                        <i class="fas fa-list"></i> Xem danh sách Bookings
+                    </button>
+                    <button type="button" id="view-all-contracts-btn" class="btn btn-secondary">
+                        <i class="fas fa-file-contract"></i> Xem danh sách Hợp đồng
+                    </button>
+                    <button type="button" id="view-all-invoices-btn" class="btn btn-info">
+                        <i class="fas fa-file-invoice"></i> Xem danh sách Hóa đơn
+                    </button>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h2 class="section-title"><i class="fas fa-clipboard-check"></i> Quy trình Vận hành</h2>
+                <div class="grid-container grid-2">
+                    <div>
+                        <h3 class="section-subtitle">Bước 1: Check-in</h3>
+                        <form id="confirm-deposit-form">
+                            <div class="form-group">
+                                <label for="confirm-deposit-booking-id">Mã Booking</label>
+                                <input type="number" id="confirm-deposit-booking-id" class="form-control" placeholder="Chọn hoặc nhập..." required>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                                <i class="fas fa-check-circle"></i> Xác nhận cọc 500k
+                            </button>
+                        </form>
+                        <hr style="margin: 1.5rem 0;">
+                        <form id="initiate-checkin-form">
+                            <div class="form-group">
+                                <label for="initiate-checkin-booking-id">Mã Booking</label>
+                                <input type="number" id="initiate-checkin-booking-id" class="form-control" placeholder="Chọn hoặc nhập..." required>
+                            </div>
+                            <button type="submit" class="btn btn-success" style="width: 100%;">
+                                <i class="fas fa-calculator"></i> Tính cọc & Bắt đầu Check-in
+                            </button>
+                        </form>
+                    </div>
+                    <div>
+                        <h3 class="section-subtitle">Bước 2: Hoàn tất & Thanh toán</h3>
+                        <form id="calculate-bill-form">
+                            <div class="form-group">
+                                <label for="bill-booking-id">Mã Booking</label>
+                                <input type="number" id="bill-booking-id" class="form-control" placeholder="Chọn hoặc nhập..." required>
+                            </div>
+                            <hr style="margin: 1rem 0;">
+                            <h4 style="margin-bottom: 1rem;">Các loại phí cố định</h4>
+                            <div id="penalty-fee-list" style="margin-bottom: 1rem;">
+                                <p>Đang tải...</p>
+                            </div>
+                            <h4 style="margin-bottom: 1rem;">Chi tiết phụ phí đã chọn</h4>
+                            <div id="selected-fees-summary" style="margin-bottom: 1rem; padding: 1rem; background: var(--light-color); border-radius: var(--border-radius-sm);">
+                                <p>Chưa chọn phụ phí.</p>
+                            </div>
+                            <p style="font-weight: bold; font-size: 1.2rem;">
+                                Tổng phụ phí: <span id="total-penalty-amount" style="color: var(--danger-color);">0</span> VNĐ
+                            </p>
+                            <hr style="margin: 1rem 0;">
+                            <h4 style="margin-bottom: 1rem;">Thêm phí tùy chỉnh (nếu cần)</h4>
+                            <div class="form-group">
+                                <label for="custom-fee-name">Tên phí</label>
+                                <input type="text" id="custom-fee-name" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="custom-fee-amount">Số tiền</label>
+                                <input type="number" id="custom-fee-amount" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="custom-fee-desc">Mô tả</label>
+                                <textarea id="custom-fee-desc" class="form-control" rows="2"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="custom-fee-photo">Ảnh bằng chứng (có thể chọn nhiều ảnh)</label>
+                                <input type="file" id="custom-fee-photo" class="form-control" multiple accept="image/*">
+                            </div>
+                            <button type="submit" class="btn btn-warning" style="width: 100%;">
+                                <i class="fas fa-file-invoice-dollar"></i> Tạo Hóa đơn Cuối cùng & QR
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div id="bill-result" style="margin-top: 2rem;"></div>
+            </div>
+
+            <div class="section-card">
+                <h2 class="section-title"><i class="fas fa-user-check"></i> Xác thực Khách hàng</h2>
+                <button id="load-pending-verifications-btn" class="btn btn-secondary">
+                    <i class="fas fa-sync-alt"></i> Tải danh sách chờ duyệt
+                </button>
+                <div id="pending-verifications-list" class="grid-container" style="margin-top: 1.5rem;"></div>
+            </div>
+
+            <div class="section-card">
+                <h2 class="section-title"><i class="fas fa-tools"></i> Quản lý Vận hành Xe</h2>
+                <div class="grid-container grid-2">
+                    <div>
+                        <h3 class="section-subtitle">Cập nhật thông tin xe</h3>
+                        <form id="update-vehicle-form">
+                            <div class="form-group">
+                                <label for="update-vehicle-id">Mã Xe</label>
+                                <input type="number" id="update-vehicle-id" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-battery-level">Mức pin (%)</label>
+                                <input type="number" id="update-battery-level" class="form-control" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="update-condition">Tình trạng mới</label>
+                                <select id="update-condition" class="form-control">
+                                    <option value="">-- Giữ nguyên --</option>
+                                    <option value="EXCELLENT">Rất tốt</option>
+                                    <option value="GOOD">Tốt</option>
+                                    <option value="MINOR_DAMAGE">Hư hỏng nhẹ</option>
+                                    <option value="MAINTENANCE_REQUIRED">Cần bảo trì</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                                <i class="fas fa-save"></i> Cập nhật
+                            </button>
+                        </form>
+                    </div>
+                    <div>
+                        <h3 class="section-subtitle">Báo cáo hư hỏng nặng</h3>
+                        <form id="report-damage-form">
+                            <div class="form-group">
+                                <label for="damage-vehicle-id">Mã Xe</label>
+                                <input type="number" id="damage-vehicle-id" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="damage-description">Mô tả hư hỏng</label>
+                                <textarea id="damage-description" class="form-control" required rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="damage-photo">Ảnh bằng chứng (có thể chọn nhiều ảnh)</label>
+                                <input type="file" id="damage-photo" class="form-control" multiple accept="image/*">
+                            </div>
+                            <button type="submit" class="btn btn-danger" style="width: 100%;">
+                                <i class="fas fa-exclamation-triangle"></i> Báo cáo & Chuyển sang bảo trì
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <hr style="margin: 2rem 0;">
+                <button id="load-staff-vehicles-btn" class="btn btn-secondary">
+                    <i class="fas fa-car-side"></i> Hiển thị/Ẩn danh sách xe tại trạm
+                </button>
+                <div id="staff-vehicle-list-container" style="margin-top: 1.5rem; display: none;">
+                    <div id="staff-vehicle-list" class="grid-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="model-detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="detail-modal-grid">
+                <div>
+                    <img id="model-detail-img" class="detail-modal-img" src="" alt="Model Image">
+                </div>
+                <div id="model-detail-info">
+                    <h2 id="model-detail-title" style="margin-bottom: 1rem;"></h2>
+                    <p id="model-detail-desc" style="color: var(--secondary-color); margin-bottom: 1rem;"></p>
+                    <div class="card-price" id="model-detail-price"></div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0;">Thông số kỹ thuật</h3>
+                    <ul class="spec-list">
+                        <li><strong>Loại xe:</strong> <span id="spec-type"></span></li>
+                        <li><strong>Số chỗ:</strong> <span id="spec-seats"></span></li>
+                        <li><strong>Quãng đường:</strong> <span id="spec-range"></span></li>
+                    </ul>
+
+                    <div class="available-vehicles-section">
+                        <h3><i class="fas fa-check-circle"></i> Xe khả dụng trong thời gian bạn chọn</h3>
+                        <div id="available-vehicles-list" style="margin-top: 1rem;">
+                            <p class="empty-state">Đang tải danh sách xe...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="booking-confirm-modal" class="modal">
+        <div class="modal-content modal-content-sm">
+            <span class="close-modal">&times;</span>
+            <h2 style="margin-bottom: 1.5rem;"><i class="fas fa-calendar-check"></i> Xác nhận đặt xe</h2>
+            <form id="booking-form">
+                <input type="hidden" id="booking-vehicle-id">
+                <input type="hidden" id="booking-station-id">
+                <input type="hidden" id="booking-start-time">
+                <input type="hidden" id="booking-end-time">
+
+                <div style="background: var(--light-color); padding: 1.5rem; border-radius: var(--border-radius-sm); margin-bottom: 1.5rem; text-align: left;">
+                    <p style="margin-bottom: 0.5rem;"><strong>Xe:</strong> <span id="booking-summary-vehicle"></span></p>
+                    <p style="margin-bottom: 0.5rem;"><strong>Biển số:</strong> <span id="booking-summary-plate"></span></p>
+                    <p style="margin-bottom: 0.5rem;"><strong>Nhận xe:</strong> <span id="booking-summary-start"></span></p>
+                    <p style="margin-bottom: 0.5rem;"><strong>Trả xe:</strong> <span id="booking-summary-end"></span></p>
+                    <p style="margin-bottom: 0;"><strong>Giá thuê:</strong> <span id="booking-summary-price"></span></p>
+                </div>
+
+                <div class="form-check" style="margin-bottom: 1.5rem;">
+                    <input type="checkbox" id="booking-agreedToTerms" required>
+                    <label for="booking-agreedToTerms">Tôi đồng ý với điều khoản dịch vụ</label>
+                </div>
+
+                <button type="submit" class="btn btn-success" style="width: 100%;">
+                    <i class="fas fa-check-circle"></i> Xác nhận đặt xe
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="booking-list-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 style="margin-bottom: 1.5rem;"><i class="fas fa-list"></i> Danh sách Bookings</h2>
+
+            <form id="booking-filter-form" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: flex-end;">
+                <div class="form-group" style="flex: 2; margin-bottom: 0;">
+                    <label for="booking-search-keyword">Tìm kiếm (Tên, SĐT, Biển số)</label>
+                    <input type="text" id="booking-search-keyword" class="form-control" placeholder="Nhập từ khóa...">
+                </div>
+                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                    <label for="booking-filter-status">Trạng thái</label>
+                    <select id="booking-filter-status" class="form-control">
+                        <option value="">Tất cả</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="CONFIRMED">Confirmed</option>
+                        <option value="RENTING">Renting</option>
+                        <option value="COMPLETED">Completed</option>
+                        <option value="CANCELLED">Cancelled</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                    <label for="booking-filter-date">Ngày tạo</label>
+                    <input type="date" id="booking-filter-date" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-filter"></i> Lọc
+                </button>
+            </form>
+
+            <div class="table-wrapper">
+                <table id="booking-list-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Khách hàng</th>
+                            <th>Xe</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="contract-list-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 style="margin-bottom: 1.5rem;"><i class="fas fa-file-contract"></i> Danh sách Hợp đồng</h2>
+            <div class="table-wrapper">
+                <table id="contract-list-table">
+                    <thead>
+                        <tr>
+                            <th>ID HĐ</th>
+                            <th>ID Booking</th>
+                            <th>Khách hàng</th>
+                            <th>Nhân viên</th>
+                            <th>Ngày ký</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="invoice-list-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 style="margin-bottom: 1.5rem;"><i class="fas fa-file-invoice"></i> Danh sách Hóa đơn</h2>
+            <div class="table-wrapper">
+                <table id="invoice-list-table">
+                    <thead>
+                        <tr>
+                            <th>ID Booking</th>
+                            <th>Khách hàng</th>
+                            <th>Tổng tiền</th>
+                            <th>Ngày tạo</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="verification-detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="verification-modal-title" style="margin-bottom: 1.5rem;">Chi tiết xác thực</h2>
+            <div id="verification-modal-body" class="detail-modal-grid"></div>
+            <div id="verification-modal-actions" style="margin-top: 2rem; display: flex; gap: 1rem;"></div>
+        </div>
+    </div>
+
+    <div id="qr-code-modal" class="modal">
+        <div class="modal-content modal-content-sm">
+            <span class="close-modal">&times;</span>
+            <h2 id="qr-code-title" style="margin-bottom: 1rem;">Thanh toán</h2>
+            <p id="qr-code-message" style="color: var(--secondary-color); margin-bottom: 1.5rem;"></p>
+            <img id="qr-code-image" src="" alt="QR Code Thanh toán" style="max-width: 100%; border-radius: var(--border-radius-sm); box-shadow: var(--box-shadow);">
+            <div class="payment-info" id="payment-info-section" style="display: none;">
+                <p><strong>Hoặc chuyển khoản thủ công:</strong></p>
+                <p><strong>Ngân hàng:</strong> TPBank</p>
+                <p><strong>Chủ tài khoản:</strong> CÔNG TY TNHH CÔNG NGHỆ EVOLVE</p>
+                <p><strong>Số tài khoản:</strong> 88303062005</p>
+                <p><strong>Số tiền:</strong> <span id="deposit-amount-span"></span> VNĐ</p>
+                <p><strong>Nội dung:</strong> TT BOOKING <span id="transfer-booking-id-span"></span></p>
+            </div>
+            <div id="qr-code-actions" style="margin-top: 1.5rem;"></div>
+        </div>
+    </div>
+
+    <div id="contract-link-modal" class="modal">
+        <div class="modal-content modal-content-sm">
+            <span class="close-modal">&times;</span>
+            <h2 style="margin-bottom: 1rem;"><i class="fas fa-check-circle" style="color: var(--success-color);"></i> Check-in thành công!</h2>
+            <p style="color: var(--secondary-color); margin-bottom: 1.5rem;">Hợp đồng điện tử đã được tạo. Bạn có thể xem và tải về tại đây:</p>
+            <a id="contract-link" href="#" target="_blank" class="btn btn-primary" style="width: 100%;">
+                <i class="fas fa-file-pdf"></i> Xem Hợp đồng
+            </a>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" style="position: fixed; top: 80px; right: 20px; z-index: 10001; display: flex; flex-direction: column; gap: 10px;"></div>
+
+    <!-- Load JavaScript file -->
+    <script src="./staff-logic.js"></script>
+</body>
+
+

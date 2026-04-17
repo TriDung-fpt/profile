@@ -1,0 +1,5 @@
+identifier,password,mockUserExists,mockPassword,mockUserStatus,expectedStatus,expectedMessage
+user@gmail.com,ValidPass@1,true,ValidPass@1,ACTIVE,SUCCESS,Đăng nhập thành công
+user@gmail.com,ValidPass@1,true,WrongPass@1,ACTIVE,FAIL,Mật khẩu không chính xác
+nonexist@gmail.com,ValidPass@1,false,ValidPass@1,ACTIVE,FAIL,Không tìm thấy người dùng
+locked@gmail.com,ValidPass@1,true,ValidPass@1,INACTIVE,FAIL,Tài khoản đã bị khóa
