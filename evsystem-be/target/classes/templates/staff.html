@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Rental System - Quản lý Thuê xe Điện</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --primary-color: #10b981;
+            --primary-dark: #059669;
+            --primary-light: #d1fae5;
+            --secondary-color: #6b7280;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #3b82f6;
+            --light-color: #f9fafb;
+            --dark-color: #111827;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+            --font-family: 'Be Vietnam Pro', sans-serif;
+            --border-radius: 16px;
+            --border-radius-sm: 8px;
+            --box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --box-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: var(--card-bg);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--box-shadow);
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+        }
+
+        .header .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .modal .btn-center {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #0d8832;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        .section-card {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .vehicle-card {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .vehicle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .vehicle-card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .vehicle-card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .vehicle-card-actions {
+            margin-top: 1rem;
+        }
+
+        .vehicle-card-body .vehicle-features {
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.75rem;
+            /* Tăng khoảng cách một chút */
+            height: 40px;
+            /* Giới hạn chiều cao để các thẻ bằng nhau */
+            overflow: hidden;
+            /* Ẩn đi phần văn bản bị thừa */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            /* Chỉ hiển thị tối đa 2 dòng */
+            -webkit-box-orient: vertical;
+        }
+
+        .vehicle-card-body h3 {
+            margin-top: 0;
+            color: var(--dark-color);
+            font-size: 1.25rem;
+        }
+
+        .vehicle-card .price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 0.5rem 0;
+        }
+
+        .vehicle-card-specs {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .toast-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            color: white;
+            font-weight: 500;
+            z-index: 10001;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s ease;
+            display: flex;
+            /* Thêm flexbox để căn chỉnh */
+            align-items: center;
+            justify-content: space-between;
+            /* Đẩy nội dung và nút X ra xa nhau */
+            gap: 15px;
+            /* Khoảng cách giữa chữ và nút X */
+        }
+
+        /* Thêm khối CSS mới này cho nút đóng */
+        .toast-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            /* Kích thước icon X */
+            line-height: 1;
+            cursor: pointer;
+            opacity: 0.8;
+            padding: 0;
+        }
+
+        .toast-close-btn:hover {
+            opacity: 1;
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast-notification.success {
+            background-color: var(--success-color);
+        }
+
+        .toast-notification.error {
+            background-color: var(--danger-color);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 25px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 900px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .modal-content-sm {
+            max-width: 450px;
+            text-align: center;
+        }
+
+        .close-modal {
+            color: #aaa;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .detail-modal-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        #detail-modal-img {
+            width: 100%;
+            border-radius: var(--border-radius);
+        }
+
+        #detail-modal-info .price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--danger-color);
+            margin: 1rem 0;
+        }
+
+        .spec-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .spec-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .table-wrapper {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-PENDING {
+            background-color: var(--warning-color);
+        }
+
+        .status-CONFIRMED {
+            background-color: var(--primary-color);
+        }
+
+        .status-RENTING {
+            background-color: var(--success-color);
+        }
+
+        .status-COMPLETED {
+            background-color: var(--secondary-color);
+        }
+
+        .status-CANCELLED {
+            background-color: var(--danger-color);
+        }
+
+        .status-AVAILABLE {
+            background-color: var(--success-color);
+        }
+
+        .status-RESERVED {
+            background-color: #17a2b8;
+        }
+
+        .status-UNAVAILABLE {
+            background-color: var(--danger-color);
+        }
+
+        .verification-image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .verification-image-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.07);
+            text-align: center;
+        }
+
+        .verification-image-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 4px;
+        }
+
+        .verification-image-item a {
+            display: block;
+        }
+
+        .verification-image-item span {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            margin-top: 5px;
+            display: block;
+        }
+
+        .payment-info {
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background-color: var(--light-color);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            border-left: 5px solid;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .stat-card .stat-label {
+            font-size: 1rem;
+            color: var(--secondary-color);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">EV Rental</div>
+            <div id="nav-right">
+                <span id="user-info" style="display: none;"></span>
+                <button id="logout-btn" class="btn btn-secondary" style="display: none;">Đăng xuất</button>
+            </div>
+        </header>
+
+        <main>
+            <div id="auth-view" class="view active">
+                <div class="grid-container" style="grid-template-columns: 1fr 1fr;">
+                    <div class="section-card">
+                        <h2 class="section-title">Đăng nhập</h2>
+                        <form id="login-form">
+                            <div class="form-group"><label for="login-identifier">Email hoặc SĐT</label><input
+                                    type="text" id="login-identifier" class="form-control" required></div>
+                            <div class="form-group"><label for="login-password">Mật khẩu</label><input type="password"
+                                    id="login-password" class="form-control" required></div>
+                            <button type="submit" class="btn btn-primary">Đăng nhập</button>
+                        </form>
+                    </div>
+                    <div class="section-card">
+                        <h2 class="section-title">Đăng ký</h2>
+                        <form id="register-form">
+                            <div class="form-group"><label for="reg-fullName">Họ và tên</label><input type="text"
+                                    id="reg-fullName" class="form-control" required></div>
+                            <div class="form-group"><label for="reg-email">Email</label><input type="email"
+                                    id="reg-email" class="form-control" required></div>
+                            <div class="form-group"><label for="reg-phone">Số điện thoại</label><input type="tel"
+                                    id="reg-phone" class="form-control" required></div>
+                            <div class="form-group"><label for="reg-password">Mật khẩu</label><input type="password"
+                                    id="reg-password" class="form-control" required></div>
+                            <div class="form-group"><label for="reg-confirmPassword">Xác nhận Mật khẩu</label><input
+                                    type="password" id="reg-confirmPassword" class="form-control" required></div>
+                            <div class="form-group form-check"><input type="checkbox" id="reg-agreedToTerms"
+                                    required><label for="reg-agreedToTerms">Tôi đồng ý với các điều khoản</label></div>
+                            <button type="submit" class="btn btn-primary">Đăng ký</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div id="renter-view" class="view">
+                <div class="section-card">
+                    <h2 class="section-title">Xin chào, Người thuê!</h2>
+                    <p>Quản lý tài khoản và đặt xe.</p>
+                </div>
+                <div class="section-card">
+                    <h2 class="section-title">Hồ Sơ & Xác Thực</h2>
+                    <div class="grid-container">
+                        <div>
+                            <h3>Thông tin của bạn</h3>
+                            <div id="profile-details">Đang tải...</div>
+                            <hr style="margin: 20px 0;">
+                            <h3>Cập nhật thông tin</h3>
+                            <form id="update-profile-form">
+                                <div class="form-group"><label for="update-fullName">Họ và tên</label><input type="text"
+                                        id="update-fullName" class="form-control"></div>
+                                <div class="form-group"><label for="update-phone">Số điện thoại</label><input
+                                        type="text" id="update-phone" class="form-control"></div>
+                                <div class="form-group"><label for="update-cccd">Số CCCD</label><input type="text"
+                                        id="update-cccd" class="form-control"></div>
+                                <div class="form-group"><label for="update-gplx">Số GPLX</label><input type="text"
+                                        id="update-gplx" class="form-control"></div>
+                                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                            </form>
+                        </div>
+                        <div>
+                            <h3>Trạng thái xác thực</h3>
+                            <div id="verification-status">Đang tải...</div>
+                            <hr style="margin: 20px 0;">
+                            <h3>Tải lên giấy tờ</h3>
+                            <form id="verification-upload-form">
+                                <div class="form-group"><label for="verify-cccd">Số CCCD</label><input type="text"
+                                        id="verify-cccd" class="form-control" required></div>
+                                <div class="form-group"><label for="verify-gplx">Số GPLX</label><input type="text"
+                                        id="verify-gplx" class="form-control" required></div>
+                                <div class="form-group"><label for="cccdFile1">CCCD mặt trước</label><input type="file"
+                                        id="cccdFile1" class="form-control" required></div>
+                                <div class="form-group"><label for="cccdFile2">CCCD mặt sau</label><input type="file"
+                                        id="cccdFile2" class="form-control" required></div>
+                                <div class="form-group"><label for="gplxFile1">GPLX mặt trước</label><input type="file"
+                                        id="gplxFile1" class="form-control" required></div>
+                                <div class="form-group"><label for="gplxFile2">GPLX mặt sau</label><input type="file"
+                                        id="gplxFile2" class="form-control" required></div>
+                                <div class="form-group"><label for="selfieFile">Ảnh selfie</label><input type="file"
+                                        id="selfieFile" class="form-control" required></div>
+                                <button type="submit" class="btn btn-primary">Gửi yêu cầu xác thực</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-card">
+                    <h2 class="section-title">Lịch sử đặt xe của tôi</h2>
+                    <div id="my-bookings-list" class="table-wrapper"></div>
+                </div>
+                <div class="section-card">
+                    <h2 class="section-title">Đặt xe</h2>
+
+                    <form id="vehicle-filter-form">
+                        <div class="grid-container"
+                            style="grid-template-columns: 2fr 1fr 1fr 1fr auto; align-items: flex-end;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="filter-station">Trạm</label>
+                                <select id="filter-station" class="form-control"></select>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="filter-keyword">Tên xe</label>
+                                <input type="text" id="filter-keyword" class="form-control"
+                                    placeholder="VD: VinFast VF3...">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="filter-min-price">Giá thấp nhất</label>
+                                <input type="number" id="filter-min-price" class="form-control" placeholder="VNĐ/giờ">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="filter-max-price">Giá cao nhất</label>
+                                <input type="number" id="filter-max-price" class="form-control" placeholder="VNĐ/giờ">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Tìm xe</button>
+                        </div>
+                    </form>
+
+                    <div id="vehicle-list-container">
+                        <h3 style="margin-top: 2rem; margin-bottom: 1rem">Danh sách xe khả dụng</h3>
+                        <div id="vehicle-list" class="grid-container">
+                            <p>Đang tải danh sách xe...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="staff-view" class="view">
+                <div class="section-card">
+                    <div id="dashboard-header">
+                        <h2 class="section-title">Dashboard Vận hành</h2>
+                        <h3 id="dashboard-station-name" style="font-weight: 500; margin-bottom: 1.5rem;">Đang tải...
+                        </h3>
+                    </div>
+                    <div id="dashboard-stats-container" class="dashboard-stats">
+                        <p>Đang tải dữ liệu...</p>
+                    </div>
+                </div>
+                <div class="section-card">
+                    <h2 class="section-title">Tra cứu nhanh</h2>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button type="button" id="view-all-bookings-btn" class="btn btn-primary">Xem danh sách
+                            Bookings</button>
+                        <button type="button" id="view-all-contracts-btn" class="btn btn-secondary">Xem danh sách Hợp
+                            đồng</button>
+                        <button type="button" id="view-all-invoices-btn" class="btn btn-info"
+                            style="background-color: #17a2b8; color:white;">Xem danh sách Hóa đơn</button>
+                    </div>
+                </div>
+                <div class="section-card">
+                    <h2 class="section-title">Quy trình Vận hành</h2>
+                    <div class="grid-container" style="grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div>
+                            <h3>Bước 1: Check-in</h3>
+                            <form id="confirm-deposit-form">
+                                <div class="form-group"><label for="confirm-deposit-booking-id">Mã Booking</label><input
+                                        type="number" id="confirm-deposit-booking-id" class="form-control"
+                                        placeholder="Chọn hoặc nhập..." required></div>
+                                <button type="submit" class="btn btn-primary">Xác nhận cọc 500k</button>
+                            </form>
+                            <hr style="margin: 1.5rem 0;">
+                            <form id="initiate-checkin-form">
+                                <div class="form-group"><label for="initiate-checkin-booking-id">Mã
+                                        Booking</label><input type="number" id="initiate-checkin-booking-id"
+                                        class="form-control" placeholder="Chọn hoặc nhập..." required></div>
+                                <button type="submit" class="btn btn-success">Tính cọc & Bắt đầu Check-in</button>
+                            </form>
+                        </div>
+                        <div>
+                            <h3>Bước 2: Hoàn tất & Thanh toán</h3>
+                            <form id="calculate-bill-form">
+                                <div class="form-group"><label for="bill-booking-id">Mã Booking</label><input
+                                        type="number" id="bill-booking-id" class="form-control"
+                                        placeholder="Chọn hoặc nhập..." required></div>
+                                <hr style="margin: 1rem 0;">
+                                <h4>Các loại phí cố định</h4>
+                                <div id="penalty-fee-list" style="margin-bottom: 1rem;">
+                                    <p>Đang tải...</p>
+                                </div>
+                                <h4>Chi tiết phụ phí đã chọn</h4>
+                                <div id="selected-fees-summary"
+                                    style="margin-bottom: 1rem; padding: 1rem; background: #f0f0f0; border-radius: 8px;">
+                                    <p>Chưa chọn phụ phí.</p>
+                                </div>
+                                <p style="font-weight: bold; font-size: 1.2rem;">Tổng phụ phí: <span
+                                        id="total-penalty-amount">0</span> VNĐ</p>
+                                <hr style="margin: 1rem 0;">
+                                <h4>Thêm phí tùy chỉnh (nếu cần)</h4>
+                                <div class="form-group"><label for="custom-fee-name">Tên phí</label><input type="text"
+                                        id="custom-fee-name" class="form-control"></div>
+                                <div class="form-group"><label for="custom-fee-amount">Số tiền</label><input
+                                        type="number" id="custom-fee-amount" class="form-control"></div>
+                                <div class="form-group"><label for="custom-fee-desc">Mô tả</label><textarea
+                                        id="custom-fee-desc" class="form-control"></textarea></div>
+                                <div class="form-group"><label for="custom-fee-photo">Ảnh bằng chứng (có thể chọn nhiều
+                                        ảnh)</label><input type="file" id="custom-fee-photo" class="form-control"
+                                        multiple></div>
+                                <button type="submit" class="btn btn-warning" style="width: 100%;">Tạo Hóa đơn Cuối cùng
+                                    & QR</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div id="bill-result" style="margin-top: 2rem;"></div>
+                </div>
+                <div class="section-card">
+                    <h2 class="section-title">Xác thực Khách hàng</h2>
+                    <button id="load-pending-verifications-btn" class="btn btn-secondary">Tải danh sách chờ
+                        duyệt</button>
+                    <div id="pending-verifications-list" class="grid-container" style="margin-top: 1.5rem;"></div>
+                </div>
+                <div class="section-card">
+                    <h2 class="section-title">Quản lý Vận hành Xe</h2>
+                    <div class="grid-container">
+                        <div>
+                            <h3>Cập nhật thông tin xe</h3>
+                            <form id="update-vehicle-form">
+                                <div class="form-group"><label for="update-vehicle-id">Mã Xe</label><input type="number"
+                                        id="update-vehicle-id" class="form-control" required></div>
+                                <div class="form-group"><label for="update-battery-level">Mức pin (%)</label><input
+                                        type="number" id="update-battery-level" class="form-control" min="0" max="100">
+                                </div>
+                                <div class="form-group">
+                                    <label for="update-condition">Tình trạng mới</label>
+                                    <select id="update-condition" class="form-control">
+                                        <option value="">-- Giữ nguyên --</option>
+                                        <option value="EXCELLENT">Rất tốt</option>
+                                        <option value="GOOD">Tốt</option>
+                                        <option value="MINOR_DAMAGE">Hư hỏng nhẹ</option>
+                                        <option value="MAINTENANCE_REQUIRED">Cần bảo trì</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                            </form>
+                        </div>
+                        <div>
+                            <h3>Báo cáo hư hỏng nặng</h3>
+                            <form id="report-damage-form">
+                                <div class="form-group"><label for="damage-vehicle-id">Mã Xe</label><input type="number"
+                                        id="damage-vehicle-id" class="form-control" required></div>
+                                <div class="form-group"><label for="damage-description">Mô tả hư hỏng</label><textarea
+                                        id="damage-description" class="form-control" required></textarea></div>
+                                <div class="form-group"><label for="damage-photo">Ảnh bằng chứng (có thể chọn nhiều
+                                        ảnh)</label><input type="file" id="damage-photo" class="form-control" multiple>
+                                </div>
+                                <button type="submit" class="btn btn-danger">Báo cáo & Chuyển sang bảo trì</button>
+                            </form>
+                        </div>
+                    </div>
+                    <hr style="margin: 2rem 0;">
+                    <button id="load-staff-vehicles-btn" class="btn btn-secondary">Hiển thị/Ẩn danh sách xe tại
+                        trạm</button>
+                    <div id="staff-vehicle-list-container" style="margin-top: 1.5rem; display: none;">
+                        <div id="staff-vehicle-list" class="grid-container">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="vehicle-detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="detail-modal-grid">
+                <div><img id="detail-modal-img" src="" alt="Vehicle Image"></div>
+                <div id="detail-modal-info">
+                    <h2 id="detail-modal-title"></h2>
+                    <p id="detail-modal-desc"></p>
+                    <div class="price" id="detail-modal-price"></div>
+                    <h3>Thông số</h3>
+                    <ul class="spec-list">
+                        <li><strong>Biển số:</strong> <span id="spec-license"></span></li>
+                        <li><strong>Loại xe:</strong> <span id="spec-type"></span></li>
+                        <li><strong>Số chỗ:</strong> <span id="spec-seats"></span></li>
+                        <li><strong>Quãng đường:</strong> <span id="spec-range"></span></li>
+                        <li><strong>Pin hiện tại:</strong> <span id="spec-battery"></span></li>
+                    </ul>
+                    <h3>Đặt xe ngay</h3>
+                    <form id="booking-form">
+                        <input type="hidden" id="booking-vehicle-id"><input type="hidden" id="booking-station-id">
+                        <div class="form-group"><label for="booking-startTime">Thời gian nhận xe</label><input
+                                type="datetime-local" id="booking-startTime" class="form-control" required></div>
+                        <div class="form-group"><label for="booking-endTime">Thời gian trả xe</label><input
+                                type="datetime-local" id="booking-endTime" class="form-control" required></div>
+                        <div class="form-group form-check"><input type="checkbox" id="booking-agreedToTerms"
+                                required><label for="booking-agreedToTerms">Tôi đồng ý với điều khoản</label></div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Xác nhận đặt xe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="booking-list-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Danh sách Bookings</h2>
+
+            <form id="booking-filter-form"
+                style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: flex-end;">
+                <div class="form-group" style="flex: 2; margin-bottom: 0;">
+                    <label for="booking-search-keyword">Tìm kiếm (Tên, SĐT, Biển số)</label>
+                    <input type="text" id="booking-search-keyword" class="form-control" placeholder="Nhập từ khóa...">
+                </div>
+                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                    <label for="booking-filter-status">Trạng thái</label>
+                    <select id="booking-filter-status" class="form-control">
+                        <option value="">Tất cả</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="CONFIRMED">Confirmed</option>
+                        <option value="RENTING">Renting</option>
+                        <option value="COMPLETED">Completed</option>
+                        <option value="CANCELLED">Cancelled</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                    <label for="booking-filter-date">Ngày tạo</label>
+                    <input type="date" id="booking-filter-date" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary">Lọc</button>
+            </form>
+            <div class="table-wrapper">
+                <table id="booking-list-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Khách hàng</th>
+                            <th>Xe</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="contract-list-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Danh sách Hợp đồng</h2>
+            <div class="table-wrapper">
+                <table id="contract-list-table">
+                    <thead>
+                        <tr>
+                            <th>ID HĐ</th>
+                            <th>ID Booking</th>
+                            <th>Khách hàng</th>
+                            <th>Nhân viên</th>
+                            <th>Ngày ký</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="invoice-list-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Danh sách Hóa đơn</h2>
+            <div class="table-wrapper">
+                <table id="invoice-list-table">
+                    <thead>
+                        <tr>
+                            <th>ID Booking</th>
+                            <th>Khách hàng</th>
+                            <th>Tổng tiền</th>
+                            <th>Ngày tạo</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="verification-detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="verification-modal-title">Chi tiết xác thực</h2>
+            <div id="verification-modal-body" class="detail-modal-grid"></div>
+            <div id="verification-modal-actions" style="margin-top: 2rem; display: flex; gap: 1rem;"></div>
+        </div>
+    </div>
+
+    <div id="qr-code-modal" class="modal">
+        <div class="modal-content modal-content-sm">
+            <span class="close-modal">&times;</span>
+            <h2 id="qr-code-title">Yêu cầu đặt xe thành công</h2>
+            <p id="qr-code-message">Vui lòng quét mã QR dưới đây để thanh toán.</p>
+            <img id="qr-code-image" src="" alt="QR Code Thanh toán" style="max-width: 100%; margin-top: 1rem;">
+            <div class="payment-info" id="payment-info-section" style="display: none;">
+                <p><strong>Hoặc chuyển khoản thủ công:</strong></p>
+                <p><strong>Ngân hàng:</strong> TPBank</p>
+                <p><strong>Chủ tài khoản:</strong> CÔNG TY TNHH CÔNG NGHỆ EVOLVE</p>
+                <p><strong>Số tài khoản:</strong> 88303062005</p>
+                <p><strong>Số tiền:</strong> <span id="deposit-amount-span"></span> VNĐ</p>
+                <p><strong>Nội dung:</strong> TT BOOKING <span id="transfer-booking-id-span"></span></p>
+            </div>
+            <div id="qr-code-actions" style="margin-top: 1.0rem;"></div>
+        </div>
+    </div>
+
+    <div id="contract-link-modal" class="modal">
+        <div class="modal-content modal-content-sm">
+            <span class="close-modal">&times;</span>
+            <h2>Check-in thành công!</h2>
+            <p>Hợp đồng điện tử đã được tạo. Bạn có thể xem và tải về tại đây:</p>
+            <a id="contract-link" href="#" target="_blank" class="btn btn-primary" style="margin-top: 0.5rem;">Xem Hợp
+                đồng</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const API_BASE_URL = 'http://localhost:8080';
+            let state = { token: localStorage.getItem('authToken'), user: JSON.parse(localStorage.getItem('authUser')), vehiclesData: [], penaltyFees: [], selectedFees: new Map() };
+
+            const views = { auth: document.getElementById('auth-view'), renter: document.getElementById('renter-view'), staff: document.getElementById('staff-view') };
+            const forms = { login: document.getElementById('login-form'), register: document.getElementById('register-form'), updateProfile: document.getElementById('update-profile-form'), verificationUpload: document.getElementById('verification-upload-form'), booking: document.getElementById('booking-form'), checkin: document.getElementById('checkin-form'), checkout: document.getElementById('checkout-form'), calculateBill: document.getElementById('calculate-bill-form'), updateVehicle: document.getElementById('update-vehicle-form'), reportDamage: document.getElementById('report-damage-form'), confirmDeposit: document.getElementById('confirm-deposit-form'), initiateCheckin: document.getElementById('initiate-checkin-form') };
+            const modals = { vehicleDetail: document.getElementById('vehicle-detail-modal'), bookingList: document.getElementById('booking-list-modal'), verificationDetail: document.getElementById('verification-detail-modal'), qrCode: document.getElementById('qr-code-modal'), contract: document.getElementById('contract-link-modal'), contractList: document.getElementById('contract-list-modal'), invoiceList: document.getElementById('invoice-list-modal') };
+            const userInfo = document.getElementById('user-info');
+            const logoutBtn = document.getElementById('logout-btn');
+            const vehicleFilterForm = document.getElementById('vehicle-filter-form');
+            const vehicleList = document.getElementById('vehicle-list');
+            const loadStaffVehiclesBtn = document.getElementById('load-staff-vehicles-btn');
+            const staffVehicleListContainer = document.getElementById('staff-vehicle-list-container');
+            const staffVehicleList = document.getElementById('staff-vehicle-list');
+
+            async function apiCall(endpoint, method = 'GET', body = null, token = state.token) {
+                const fullUrl = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}/api${endpoint}`;
+                const headers = {};
+                if (!(body instanceof FormData)) {
+                    headers['Content-Type'] = 'application/json';
+                }
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+
+                const config = { method, headers };
+                if (body) {
+                    config.body = (body instanceof FormData) ? body : JSON.stringify(body);
+                }
+                try {
+                    const response = await fetch(fullUrl, config);
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ message: response.statusText }));
+                        throw new Error(errorData.error || errorData.message || Object.values(errorData).join(', '));
+                    }
+                    const text = await response.text();
+                    return text ? JSON.parse(text) : {};
+                } catch (error) { console.error(`API call failed:`, error); throw error; }
+            }
+            function showNotification(message, type = 'success', duration = 3000) {
+                const notification = document.createElement('div');
+                notification.className = `toast-notification ${type}`;
+
+                // Thêm nút X vào HTML của thông báo
+                notification.innerHTML = `<span>${message}</span><button class="toast-close-btn">&times;</button>`;
+                document.body.appendChild(notification);
+
+                let hideTimeout;
+
+                // Tạo một hàm riêng để đóng thông báo (tránh lặp code)
+                const closeNotification = () => {
+                    notification.classList.remove('show');
+                    // Hủy bỏ việc tự động ẩn nếu người dùng đã bấm nút X
+                    clearTimeout(hideTimeout);
+                    // Đợi hiệu ứng mờ đi hoàn tất rồi mới xóa khỏi DOM
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 500);
+                };
+
+                // Gán sự kiện click cho nút X
+                notification.querySelector('.toast-close-btn').addEventListener('click', closeNotification);
+
+                // Hiển thị thông báo
+                setTimeout(() => notification.classList.add('show'), 10);
+
+                // Tự động ẩn thông báo sau một khoảng thời gian
+                hideTimeout = setTimeout(closeNotification, duration)
+            }
+            function showView(viewId) { Object.values(views).forEach(view => view.classList.remove('active')); if (views[viewId]) views[viewId].classList.add('active'); }
+            function saveState(token, user) { state.token = token; state.user = user; localStorage.setItem('authToken', token); localStorage.setItem('authUser', JSON.stringify(user)); }
+            function clearState() { state.token = null; state.user = null; localStorage.removeItem('authToken'); localStorage.removeItem('authUser'); }
+
+            function updateUI() {
+                if (state.token && state.user) {
+                    userInfo.textContent = `Xin chào, ${state.user.fullName} (${state.user.role})`; userInfo.style.display = 'inline'; logoutBtn.style.display = 'inline-block';
+                    if (state.user.role === 'EV_RENTER') { showView('renter'); loadRenterDashboard(); }
+                    else if (state.user.role === 'STATION_STAFF') { showView('staff'); loadStaffDashboard(); }
+                    else { showView('auth'); }
+                } else { userInfo.style.display = 'none'; logoutBtn.style.display = 'none'; showView('auth'); }
+            }
+
+            forms.login.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                try {
+                    const data = await apiCall('/auth/login', 'POST', { identifier: e.target['login-identifier'].value, password: e.target['login-password'].value }, null);
+                    const profileData = await apiCall('/profile/role', 'GET', null, data.token);
+                    saveState(data.token, { fullName: data.fullName, role: profileData.role });
+                    showNotification(`Đăng nhập thành công! Chào mừng ${data.fullName}.`, 'success'); updateUI();
+                } catch (error) { showNotification(`Đăng nhập thất bại: ${error.message}`, 'error'); }
+            });
+            forms.register.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                try {
+                    const data = await apiCall('/auth/register', 'POST', { fullName: e.target['reg-fullName'].value, email: e.target['reg-email'].value, phone: e.target['reg-phone'].value, password: e.target['reg-password'].value, confirmPassword: e.target['reg-confirmPassword'].value, agreedToTerms: e.target['reg-agreedToTerms'].checked }, null);
+                    showNotification(data.message, 'success'); forms.register.reset();
+                } catch (error) { showNotification(`Đăng ký thất bại: ${error.message}`, 'error'); }
+            });
+            logoutBtn.addEventListener('click', async () => { try { await apiCall('/auth/logout', 'POST'); } catch (error) { console.error("Logout failed but clearing state.", error); } finally { clearState(); showNotification('Đã đăng xuất.', 'success'); updateUI(); } });
+
+            function loadRenterDashboard() {
+                loadProfile();
+                loadVerificationStatus();
+                loadStationsForFilter(); // Tên hàm mới để load trạm vào bộ lọc
+                loadAndRenderAllVehicles(); // Tải tất cả xe ngay khi vào trang
+                loadMyBookings();
+            }
+
+            async function loadProfile() {
+                try {
+                    const user = await apiCall('/profile/me');
+                    document.getElementById('profile-details').innerHTML = `<p><strong>Họ tên:</strong> ${user.fullName}</p><p><strong>Email:</strong> ${user.email}</p><p><strong>SĐT:</strong> ${user.phone}</p><p><strong>CCCD:</strong> ${user.cccd || 'N/A'}</p><p><strong>GPLX:</strong> ${user.gplx || 'N/A'}</p>`;
+                    forms.updateProfile['update-fullName'].value = user.fullName;
+                    forms.updateProfile['update-phone'].value = user.phone;
+                } catch (error) { showNotification('Không thể tải hồ sơ.', 'error'); }
+            }
+            async function loadVerificationStatus() {
+                try {
+                    const data = await apiCall('/renter/verification-status');
+                    document.getElementById('verification-status').innerHTML = `Trạng thái: <strong>${data.status}</strong>` + (data.status === 'REJECTED' ? `<br><p style="color:var(--danger-color)">Lý do: ${data.reason}</p>` : '');
+                } catch (error) { showNotification('Không thể tải trạng thái xác thực.', 'error'); }
+            }
+            async function loadStationsForFilter() {
+                const stationFilterSelect = document.getElementById('filter-station');
+                try {
+                    const stations = await apiCall('/stations');
+                    // Thêm lựa chọn "Tất cả các trạm"
+                    stationFilterSelect.innerHTML = '<option value="">Tất cả các trạm</option>';
+                    stations.forEach(s => {
+                        stationFilterSelect.innerHTML += `<option value="${s.stationId}">${s.name}</option>`;
+                    });
+                } catch (error) {
+                    showNotification('Lỗi tải danh sách trạm.', 'error');
+                }
+            }
+            async function loadAndRenderAllVehicles() {
+                const vehicleList = document.getElementById('vehicle-list');
+                vehicleList.innerHTML = '<p>Đang tải...</p>';
+
+                // Đọc giá trị từ các ô lọc
+                const params = new URLSearchParams();
+                const stationId = document.getElementById('filter-station').value;
+                const keyword = document.getElementById('filter-keyword').value;
+                const minPrice = document.getElementById('filter-min-price').value;
+                const maxPrice = document.getElementById('filter-max-price').value;
+
+                if (stationId) params.append('stationId', stationId);
+                if (keyword) params.append('keyword', keyword);
+                if (minPrice) params.append('minPrice', minPrice);
+                if (maxPrice) params.append('maxPrice', maxPrice);
+
+                // Mặc định sắp xếp mới nhất trước
+                params.append('sortBy', 'createdAt');
+                params.append('order', 'desc');
+
+                try {
+                    // Gọi API tìm kiếm mới
+                    const vehicles = await apiCall(`/vehicles/search?${params.toString()}`);
+                    state.vehiclesData = vehicles; // Lưu dữ liệu để mở modal chi tiết
+                    vehicleList.innerHTML = '';
+                    if (vehicles.length === 0) {
+                        vehicleList.innerHTML = '<p>Không tìm thấy xe nào phù hợp với điều kiện của bạn.</p>';
+                        return;
+                    }
+                    // Phần render xe (sử dụng lại logic render thẻ card)
+                    vehicles.forEach((v, i) => {
+                        const card = document.createElement('div');
+                        card.className = 'vehicle-card';
+                        card.dataset.index = i;
+
+                        // CẬP NHẬT LẠI CẤU TRÚC innerHTML Ở ĐÂY
+                        card.innerHTML = `<img class="vehicle-card-img" src="${v.imageUrl || 'https://via.placeholder.com/400x250.png?text=No+Image'}" alt="${v.modelName}">
+                              <div class="vehicle-card-body">
+                                  <h3>${v.modelName}</h3>
+                                  
+                                  <p class="vehicle-features" title="${v.features || 'Không có thông tin tính năng'}">${v.features || ''}</p>
+
+                                  <div class="price">${v.pricePerHour.toLocaleString('vi-VN')} VNĐ <span>/giờ</span></div>
+                                  <div class="vehicle-card-specs">
+                                      <div><i class="fas fa-user-friends"></i> ${v.seatCount || 'N/A'} chỗ</div>
+                                      <div><i class="fas fa-road"></i> ${v.rangeKm || 'N/A'} km</div>
+                                      <div><i class="fas fa-car-battery"></i> ${v.batteryLevel}%</div>
+                                  </div>
+                              </div>`;
+
+                        vehicleList.appendChild(card);
+                    });
+                } catch (error) {
+                    vehicleList.innerHTML = `<p style="color:var(--danger-color)">Lỗi tải danh sách xe: ${error.message}</p>`;
+                }
+            }
+            vehicleFilterForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                loadAndRenderAllVehicles();
+            });
+
+            async function loadMyBookings() {
+                const container = document.getElementById('my-bookings-list');
+                container.innerHTML = '<p>Đang tải lịch sử...</p>';
+                try {
+                    const bookings = await apiCall('/renter/my-bookings');
+                    if (bookings.length === 0) { container.innerHTML = '<p>Bạn chưa có lịch sử đặt xe nào.</p>'; return; }
+                    const table = document.createElement('table');
+                    table.innerHTML = `<thead><tr><th>ID</th><th>Xe</th><th>Trạng thái</th><th>Ngày tạo</th><th>Hành động</th></tr></thead><tbody></tbody>`;
+                    const tbody = table.querySelector('tbody');
+                    bookings.forEach(b => {
+                        const row = document.createElement('tr');
+                        let actionHtml = '';
+                        if (b.status === 'PENDING') {
+                            actionHtml = `<button class="btn btn-sm btn-warning pay-deposit-btn" data-booking-id="${b.bookingId}">Thanh toán cọc</button>`;
+                        }
+                        row.innerHTML = `<td>${b.bookingId}</td><td>${b.modelName} (${b.vehicleLicensePlate})</td><td><span class="status-badge status-${b.status}">${b.status}</span></td><td>${new Date(b.createdAt).toLocaleString('vi-VN')}</td><td>${actionHtml}</td>`;
+                        tbody.appendChild(row);
+                    });
+                    container.innerHTML = '';
+                    container.appendChild(table);
+                } catch (error) {
+                    container.innerHTML = `<p style="color:red">Lỗi tải lịch sử đặt xe: ${error.message}</p>`;
+                }
+            }
+            document.getElementById('my-bookings-list').addEventListener('click', async (e) => {
+                if (e.target.classList.contains('pay-deposit-btn')) {
+                    const bookingId = e.target.dataset.bookingId;
+                    try {
+                        const data = await apiCall(`/bookings/${bookingId}/deposit-qr`);
+                        openQrModal({
+                            mode: 'renter',
+                            qrCodeUrl: data.qrCodeUrl,
+                            bookingId: bookingId,
+                            depositAmount: 500000
+                        });
+                    } catch (error) {
+                        showNotification(`Không thể lấy mã QR: ${error.message}`, 'error');
+                    }
+                }
+            });
+
+            function openDetailModal(vehicleIndex) {
+                const v = state.vehiclesData[vehicleIndex]; if (!v) return;
+                document.getElementById('detail-modal-img').src = v.imageUrl || 'https://via.placeholder.com/400x250.png?text=No+Image';
+                document.getElementById('detail-modal-title').textContent = v.modelName; document.getElementById('detail-modal-desc').textContent = v.description || 'Chưa có mô tả.';
+                document.getElementById('detail-modal-price').textContent = `${v.pricePerHour.toLocaleString('vi-VN')} VNĐ / giờ`;
+                document.getElementById('spec-license').textContent = v.licensePlate; document.getElementById('spec-type').textContent = v.vehicleType;
+                document.getElementById('spec-seats').textContent = `${v.seatCount || 'N/A'} chỗ`; document.getElementById('spec-range').textContent = `Tối đa ${v.rangeKm || 'N/A'} km`;
+                document.getElementById('spec-battery').textContent = `${v.batteryLevel}%`;
+                document.getElementById('booking-vehicle-id').value = v.vehicleId;
+                const selectedStationIdInFilter = document.getElementById('filter-station').value;
+                document.getElementById('booking-station-id').value = selectedStationIdInFilter || v.stationId;
+                modals.vehicleDetail.style.display = 'block';
+            }
+            vehicleList.addEventListener('click', (e) => { const card = e.target.closest('.vehicle-card'); if (card && card.dataset.index) openDetailModal(card.dataset.index); });
+
+            forms.updateProfile.addEventListener('submit', async (e) => { e.preventDefault(); try { const data = await apiCall('/profile/update', 'PUT', { fullName: e.target['update-fullName'].value, phone: e.target['update-phone'].value, cccd: e.target['update-cccd'].value, gplx: e.target['update-gplx'].value }); showNotification(data.message, 'success'); loadProfile(); } catch (error) { showNotification(`Cập nhật thất bại: ${error.message}`, 'error'); } });
+            forms.verificationUpload.addEventListener('submit', async (e) => {
+                e.preventDefault(); const formData = new FormData();
+                formData.append('cccd', e.target['verify-cccd'].value); formData.append('gplx', e.target['verify-gplx'].value);
+                formData.append('cccdFile1', e.target['cccdFile1'].files[0]); formData.append('cccdFile2', e.target['cccdFile2'].files[0]);
+                formData.append('gplxFile1', e.target['gplxFile1'].files[0]); formData.append('gplxFile2', e.target['gplxFile2'].files[0]);
+                formData.append('selfieFile', e.target['selfieFile'].files[0]);
+                try { const data = await apiCall('/profile/verification/upload', 'POST', formData); showNotification(data.message, 'success'); loadVerificationStatus(); } catch (error) { showNotification(`Tải lên thất bại: ${error.message}`, 'error'); }
+            });
+            forms.booking.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                try {
+                    const data = await apiCall('/bookings', 'POST', { vehicleId: e.target['booking-vehicle-id'].value, stationId: e.target['booking-station-id'].value, startTime: e.target['booking-startTime'].value, endTime: e.target['booking-endTime'].value, agreedToTerms: e.target['booking-agreedToTerms'].checked });
+                    modals.vehicleDetail.style.display = 'none';
+                    forms.booking.reset();
+                    openQrModal({
+                        mode: 'renter',
+                        qrCodeUrl: data.qrCodeUrl,
+                        bookingId: data.bookingId,
+                        depositAmount: data.downpayRequired
+                    });
+                    showNotification(data.message, 'success');
+                    loadAndRenderAllVehicles();
+                } catch (error) { showNotification(`Đặt xe thất bại: ${error.message}`, 'error'); }
+            });
+
+            // ========================= STAFF FUNCTIONS - START =========================
+
+            function loadStaffDashboard() {
+                // MODIFIED: This function now also loads the main dashboard stats
+                renderDashboard();
+                loadAndRenderPenaltyFees();
+            }
+
+            // NEW FUNCTION: Renders the main dashboard for staff
+            async function renderDashboard() {
+                const container = document.getElementById('dashboard-stats-container');
+                try {
+                    const data = await apiCall('/staff/dashboard');
+                    document.getElementById('dashboard-station-name').textContent = `Trạm: ${data.stationName}`;
+
+                    container.innerHTML = `
+                        <div class="stat-card" style="border-color: var(--dark-color);">
+                            <div class="stat-value">${data.totalVehicles}</div>
+                            <div class="stat-label">Tổng số xe</div>
+                        </div>
+                    `;
+
+                    const statusColors = {
+                        AVAILABLE: 'var(--success-color)', RENTED: 'var(--primary-color)',
+                        RESERVED: '#17a2b8', UNAVAILABLE: 'var(--danger-color)'
+                    };
+
+                    for (const status in statusColors) {
+                        const count = data.statusSummary[status] || 0;
+                        container.innerHTML += `
+                            <div class="stat-card" style="border-color: ${statusColors[status]};">
+                                <div class="stat-value">${count}</div>
+                                <div class="stat-label">${status}</div>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    container.innerHTML = `<p style="color:red">Không thể tải dashboard: ${error.message}</p>`;
+                }
+            }
+
+            async function loadAndRenderPenaltyFees() {
+                try {
+                    const fees = await apiCall('/staff/penalty-fees'); state.penaltyFees = fees;
+                    const feeListEl = document.getElementById('penalty-fee-list'); feeListEl.innerHTML = '';
+                    fees.forEach(fee => {
+                        const feeItemEl = document.createElement('div');
+                        feeItemEl.style = 'display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee;';
+                        feeItemEl.innerHTML = `<span>${fee.feeName} - ${fee.fixedAmount.toLocaleString('vi-VN')} VNĐ</span><div><button type="button" class="btn btn-sm btn-secondary" data-fee-id="${fee.id}" data-action="decrease">-</button> <button type="button" class="btn btn-sm btn-primary" data-fee-id="${fee.id}" data-action="increase">+</button></div>`;
+                        feeListEl.appendChild(feeItemEl);
+                    });
+                } catch (error) { document.getElementById('penalty-fee-list').innerHTML = `<p style="color:red">Lỗi tải danh sách phí.</p>`; }
+            }
+
+            async function loadAndRenderStaffVehicles() {
+                staffVehicleList.innerHTML = '<p>Đang tải danh sách xe...</p>';
+                try {
+                    const vehicles = await apiCall('/staff/my-station/vehicles');
+                    staffVehicleList.innerHTML = '';
+                    if (vehicles.length === 0) {
+                        staffVehicleList.innerHTML = '<p>Trạm này chưa có xe nào.</p>';
+                        return;
+                    }
+
+                    vehicles.forEach(v => {
+                        const card = document.createElement('div');
+                        card.className = 'vehicle-card';
+                        // Thay đổi cursor để người dùng biết không thể click vào thẻ
+                        card.style.cursor = 'default';
+
+                        // Cấu trúc HTML gần giống của renter, nhưng có thêm biển số và nút chọn
+                        card.innerHTML = `<img class="vehicle-card-img" src="${v.imageUrl || 'https://via.placeholder.com/400x250.png?text=No+Image'}" alt="${v.modelName}">
+                              <div class="vehicle-card-body">
+                                  <h3>${v.modelName}</h3>
+                                  <p style="font-weight: 500;">BS: ${v.licensePlate}</p>
+                                  <p class="price"><span class="status-badge status-${v.status}">${v.status}</span></p>
+                                  <div class="vehicle-card-specs">
+                                      <div><i class="fas fa-car"></i> ${v.condition}</div>
+                                      <div><i class="fas fa-tachometer-alt"></i> ${v.currentMileage} km</div>
+                                      <div><i class="fas fa-car-battery"></i> ${v.batteryLevel}%</div>
+                                  </div>
+                                  <div class="vehicle-card-actions">
+                                      <button class="btn btn-primary btn-sm select-vehicle-btn" data-vehicle-id="${v.vehicleId}">Chọn xe này</button>
+                                  </div>
+                              </div>`;
+                        staffVehicleList.appendChild(card);
+                    });
+
+                } catch (error) {
+                    staffVehicleList.innerHTML = `<p style="color:red">Lỗi tải danh sách xe: ${error.message}</p>`;
+                }
+            }
+
+            loadStaffVehiclesBtn.addEventListener('click', () => {
+                const isHidden = staffVehicleListContainer.style.display === 'none';
+                if (isHidden) {
+                    staffVehicleListContainer.style.display = 'block';
+                    loadAndRenderStaffVehicles();
+                } else {
+                    staffVehicleListContainer.style.display = 'none';
+                }
+            });
+
+            staffVehicleList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('select-vehicle-btn')) {
+                    const vehicleId = e.target.dataset.vehicleId;
+
+                    // Tự động điền ID vào cả hai form
+                    document.getElementById('update-vehicle-id').value = vehicleId;
+                    document.getElementById('damage-vehicle-id').value = vehicleId;
+
+                    showNotification(`Đã chọn xe có Mã ID: ${vehicleId}`, 'success');
+
+                    // Tự cuộn lên đầu trang để staff thấy form
+                    window.scrollTo({ top: document.getElementById('update-vehicle-form').offsetTop - 100, behavior: 'smooth' });
+                }
+            });
+
+            const viewAllBookingsBtn = document.getElementById('view-all-bookings-btn');
+            const viewAllContractsBtn = document.getElementById('view-all-contracts-btn');
+            const viewAllInvoicesBtn = document.getElementById('view-all-invoices-btn');
+            const bookingListTableBody = document.querySelector('#booking-list-table tbody');
+            const contractListTableBody = document.querySelector('#contract-list-table tbody');
+            const invoiceListTableBody = document.querySelector('#invoice-list-table tbody');
+
+            async function loadAndRenderBookings() {
+                bookingListTableBody.innerHTML = '<tr><td colspan="6">Đang tải...</td></tr>';
+
+                // ĐỌC GIÁ TRỊ TỪ FORM LỌC
+                const keyword = document.getElementById('booking-search-keyword').value;
+                const status = document.getElementById('booking-filter-status').value;
+                const date = document.getElementById('booking-filter-date').value;
+
+                // XÂY DỰNG URL VỚI CÁC THAM SỐ
+                const params = new URLSearchParams();
+                if (keyword) params.append('keyword', keyword);
+                if (status) params.append('status', status);
+                if (date) params.append('date', date);
+
+                const endpoint = `/staff/bookings?${params.toString()}`;
+
+                try {
+                    // GỌI API VỚI ENDPOINT MỚI
+                    const bookings = await apiCall(endpoint);
+                    bookingListTableBody.innerHTML = '';
+                    if (bookings.length === 0) {
+                        bookingListTableBody.innerHTML = '<tr><td colspan="6">Không tìm thấy booking nào phù hợp.</td></tr>';
+                        return;
+                    }
+                    // Phần render bảng giữ nguyên
+                    bookings.forEach(b => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td>${b.bookingId}</td><td>${b.renterName}</td><td>${b.modelName} (${b.vehicleLicensePlate})</td><td><span class="status-badge status-${b.status}">${b.status}</span></td><td>${new Date(b.createdAt).toLocaleString('vi-VN')}</td><td><button class="btn btn-sm btn-primary select-booking-btn" data-booking-id="${b.bookingId}">Chọn</button></td>`;
+                        bookingListTableBody.appendChild(row);
+                    });
+                } catch (error) {
+                    bookingListTableBody.innerHTML = `<tr><td colspan="6" style="color:red">Lỗi tải danh sách: ${error.message}</td></tr>`;
+                }
+            }
+
+            document.getElementById('booking-filter-form').addEventListener('submit', (e) => {
+                e.preventDefault(); // Ngăn form submit và reload trang
+                loadAndRenderBookings(); // Gọi lại hàm load với các giá trị lọc mới
+            });
+
+            viewAllBookingsBtn.addEventListener('click', () => {
+                document.getElementById('booking-filter-form').reset();
+                loadAndRenderBookings();
+                modals.bookingList.style.display = 'block';
+            });
+            bookingListTableBody.addEventListener('click', (e) => {
+                if (e.target.classList.contains('select-booking-btn')) {
+                    const bookingId = e.target.dataset.bookingId;
+                    document.getElementById('confirm-deposit-booking-id').value = bookingId;
+                    document.getElementById('initiate-checkin-booking-id').value = bookingId;
+                    document.getElementById('bill-booking-id').value = bookingId;
+                    modals.bookingList.style.display = 'none'; showNotification(`Đã chọn Booking ID: ${bookingId}`, 'success');
+                }
+            });
+
+            async function loadAndRenderContracts() {
+                contractListTableBody.innerHTML = '<tr><td colspan="6">Đang tải...</td></tr>';
+                try {
+                    const contracts = await apiCall('/staff/contracts'); contractListTableBody.innerHTML = '';
+                    if (contracts.length === 0) { contractListTableBody.innerHTML = '<tr><td colspan="6">Chưa có hợp đồng nào.</td></tr>'; return; }
+                    contracts.forEach(c => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td>${c.contractId}</td><td>${c.bookingId}</td><td>${c.renterName}</td><td>${c.staffName}</td><td>${new Date(c.signedDate).toLocaleString('vi-VN')}</td><td><a href="${API_BASE_URL}${c.contractPdfPath}" target="_blank" class="btn btn-sm btn-secondary">Xem PDF</a></td>`;
+                        contractListTableBody.appendChild(row);
+                    });
+                } catch (error) { contractListTableBody.innerHTML = `<tr><td colspan="6" style="color:red">Lỗi tải danh sách: ${error.message}</td></tr>`; }
+            }
+            viewAllContractsBtn.addEventListener('click', () => { loadAndRenderContracts(); modals.contractList.style.display = 'block'; });
+
+            async function loadAndRenderInvoices() {
+                invoiceListTableBody.innerHTML = '<tr><td colspan="5">Đang tải...</td></tr>';
+                try {
+                    const invoices = await apiCall('/staff/invoices'); invoiceListTableBody.innerHTML = '';
+                    if (invoices.length === 0) { invoiceListTableBody.innerHTML = '<tr><td colspan="5">Chưa có hóa đơn nào.</td></tr>'; return; }
+                    invoices.forEach(i => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td>${i.bookingId}</td><td>${i.renterName}</td><td>${(i.finalAmount || 0).toLocaleString('vi-VN')} VNĐ</td><td>${new Date(i.createdDate).toLocaleString('vi-VN')}</td><td><a href="${API_BASE_URL}${i.invoicePdfPath}" target="_blank" class="btn btn-sm btn-secondary">Xem PDF</a></td>`;
+                        invoiceListTableBody.appendChild(row);
+                    });
+                } catch (error) { invoiceListTableBody.innerHTML = `<tr><td colspan="5" style="color:red">Lỗi tải danh sách: ${error.message}</td></tr>`; }
+            }
+            viewAllInvoicesBtn.addEventListener('click', () => { loadAndRenderInvoices(); modals.invoiceList.style.display = 'block'; });
+
+            forms.confirmDeposit.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const bookingId = e.target['confirm-deposit-booking-id'].value;
+                if (!bookingId) { showNotification('Vui lòng nhập ID booking', 'error'); return; }
+                try {
+                    const data = await apiCall(`/staff/bookings/${bookingId}/confirm-deposit`, 'POST');
+                    showNotification(data.message, 'success');
+                    forms.confirmDeposit.reset();
+                } catch (error) {
+                    showNotification(`Xác nhận thất bại: ${error.message}`, 'error');
+                }
+            });
+
+            forms.initiateCheckin.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const bookingId = document.getElementById('initiate-checkin-booking-id').value;
+                if (!bookingId) { showNotification('Vui lòng nhập ID booking', 'error'); return; }
+                try {
+                    const data = await apiCall(`/staff/rentals/initiate-check-in/${bookingId}`, 'POST');
+                    openQrModal({
+                        mode: 'staff',
+                        step: 'checkin',
+                        qrCodeUrl: data.qrCodeUrl,
+                        bookingId: bookingId,
+                        depositAmount: data.rentalDepositAmount,
+                        includePaymentInfo: true
+                    });
+                } catch (error) {
+                    showNotification(`Bắt đầu Check-in thất bại: ${error.message}`, 'error');
+                }
+            });
+
+            modals.qrCode.addEventListener('click', async (e) => {
+                if (e.target.id === 'confirm-cash-checkin') {
+                    const bookingId = e.target.dataset.bookingId;
+                    finalizeCheckin(bookingId, 'CASH');
+                }
+
+                if (e.target.id === 'confirm-final-transfer') {
+                    const bookingId = e.target.dataset.bookingId;
+                    if (confirm(`Bạn có chắc chắn muốn xác nhận thanh toán chuyển khoản và hoàn tất Booking ID: ${bookingId}?`)) {
+                        finalizePayment(bookingId, 'BANK_TRANSFER');
+                    }
+                }
+
+                if (e.target.id === 'confirm-final-cash') {
+                    const bookingId = e.target.dataset.bookingId;
+                    if (confirm(`Bạn có chắc chắn muốn xác nhận thanh toán tiền mặt và hoàn tất Booking ID: ${bookingId}?`)) {
+                        finalizePayment(bookingId, 'CASH');
+                    }
+                }
+            });
+
+            // MODIFIED: Function updated to handle multiple files
+            async function finalizeCheckin(bookingId, paymentMethod) {
+                const photoInput = document.getElementById('checkin-photo');
+                const photoFiles = photoInput.files;
+
+                if (!photoFiles || photoFiles.length === 0) {
+                    showNotification('Vui lòng chọn ít nhất một ảnh tình trạng xe.', 'error');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('depositPaymentMethod', paymentMethod);
+
+                for (const file of photoFiles) {
+                    formData.append('checkInPhotos', file);
+                }
+
+                try {
+                    const data = await apiCall(`/staff/rentals/check-in/${bookingId}`, 'POST', formData);
+
+                    modals.qrCode.style.display = 'none';
+                    document.getElementById('contract-link').href = API_BASE_URL + data.contractUrl;
+                    modals.contract.style.display = 'block';
+                    showNotification(data.message, 'success');
+                    renderDashboard(); // Refresh dashboard after check-in
+                } catch (error) {
+                    showNotification(`Hoàn tất Check-in thất bại: ${error.message}`, 'error');
+                }
+            }
+
+            async function finalizePayment(bookingId, paymentMethod) {
+                const body = {
+                    paymentMethod: paymentMethod,
+                    staffNote: `Xác nhận thanh toán cuối cùng qua ${paymentMethod}`
+                };
+
+                try {
+                    const data = await apiCall(`/staff/bookings/${bookingId}/confirm-payment`, 'POST', body);
+
+                    modals.qrCode.style.display = 'none';
+                    showNotification(data.message, 'success');
+
+                    renderDashboard();
+                    loadAndRenderBookings();
+
+                } catch (error) {
+                    showNotification(`Xác nhận thanh toán thất bại: ${error.message}`, 'error');
+                }
+            }
+
+
+            function updateBillSummaryUI() {
+                const summaryEl = document.getElementById('selected-fees-summary'); const totalAmountEl = document.getElementById('total-penalty-amount');
+                let total = 0; if (state.selectedFees.size === 0) { summaryEl.innerHTML = '<p>Chưa chọn phụ phí nào.</p>'; totalAmountEl.textContent = '0'; return; }
+                summaryEl.innerHTML = '';
+                state.selectedFees.forEach((item) => {
+                    const itemTotal = item.data.fixedAmount * item.quantity; total += itemTotal;
+                    const p = document.createElement('p'); p.innerHTML = `<strong>${item.data.feeName}</strong> x ${item.quantity} = ${itemTotal.toLocaleString('vi-VN')} VNĐ`;
+                    summaryEl.appendChild(p);
+                });
+                totalAmountEl.textContent = total.toLocaleString('vi-VN');
+            }
+            document.getElementById('penalty-fee-list').addEventListener('click', e => {
+                if (e.target.tagName !== 'BUTTON') return;
+                const feeId = parseInt(e.target.dataset.feeId); const action = e.target.dataset.action;
+                if (action === 'increase') {
+                    if (state.selectedFees.has(feeId)) { state.selectedFees.get(feeId).quantity++; }
+                    else { const feeData = state.penaltyFees.find(f => f.id === feeId); state.selectedFees.set(feeId, { data: feeData, quantity: 1 }); }
+                } else if (action === 'decrease') {
+                    if (state.selectedFees.has(feeId)) { const item = state.selectedFees.get(feeId); item.quantity--; if (item.quantity === 0) state.selectedFees.delete(feeId); }
+                }
+                updateBillSummaryUI();
+            });
+            // MODIFIED: Submit listener updated to handle multiple files for custom fees
+            forms.calculateBill.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const bookingId = e.target['bill-booking-id'].value;
+                if (!bookingId) { showNotification('Vui lòng chọn booking.', 'error'); return; }
+
+                const formData = new FormData();
+
+                // Handle selected fixed fees
+                const selectedFeesPayload = [];
+                state.selectedFees.forEach((item, feeId) => {
+                    selectedFeesPayload.push({ feeId: feeId, quantity: item.quantity });
+                });
+                // Append as a JSON string part
+                if (selectedFeesPayload.length > 0) {
+                    formData.append('selectedFeesJson', JSON.stringify(selectedFeesPayload));
+                }
+
+                // Handle custom fee data as separate parts
+                const amountValue = e.target['custom-fee-amount'].value.trim().replace(',', '.');
+                const customFeeAmount = parseFloat(amountValue);
+
+                if (amountValue !== '' && !isNaN(customFeeAmount)) {
+                    formData.append('customFee.feeName', e.target['custom-fee-name'].value);
+                    formData.append('customFee.amount', customFeeAmount);
+                    formData.append('customFee.description', e.target['custom-fee-desc'].value);
+
+                    const photoFiles = e.target['custom-fee-photo'].files;
+                    if (photoFiles && photoFiles.length > 0) {
+                        for (const file of photoFiles) {
+                            formData.append('customFee.photoFiles[]', file); // dùng [] nếu backend cần mảng
+                        }
+                    }
+                }
+
+                try {
+                    const bill = await apiCall(`/staff/bookings/${bookingId}/calculate-bill`, 'POST', formData);
+                    document.getElementById('bill-result').innerHTML = '';
+
+                    openQrModal({
+                        mode: 'staff',
+                        step: 'final',
+                        qrCodeUrl: bill.qrCodeUrl,
+                        bookingId: bill.bookingId,
+                        depositAmount: (typeof bill.paymentDue !== 'undefined' ? bill.paymentDue : (bill.finalPaymentDue || 0)),
+                        invoicePdfPath: bill.invoicePdfPath,
+                        includePaymentInfo: true
+                    });
+                } catch (error) {
+                    showNotification(`Tính hóa đơn thất bại: ${error.message}`, 'error');
+                }
+            });
+
+            const loadPendingVerificationsBtn = document.getElementById('load-pending-verifications-btn');
+            const pendingVerificationsList = document.getElementById('pending-verifications-list');
+            const verificationModal = modals.verificationDetail;
+
+            async function loadAndRenderVerifications() {
+                pendingVerificationsList.innerHTML = '<p>Đang tải danh sách...</p>';
+                try {
+                    const users = await apiCall('/staff/verifications/pending');
+                    pendingVerificationsList.innerHTML = '';
+                    if (users.length === 0) {
+                        pendingVerificationsList.innerHTML = '<p>Không có yêu cầu xác thực nào đang chờ.</p>';
+                        return;
+                    }
+                    users.forEach(user => {
+                        const card = document.createElement('div');
+                        card.className = 'section-card';
+                        card.innerHTML = `
+                        <h4>${user.fullName}</h4>
+                        <p>ID: ${user.userId} - Email: ${user.email}</p>
+                        <button class="btn btn-sm btn-primary view-verification-btn" data-user-id='${user.userId}'>Xem chi tiết</button>
+                    `;
+                        pendingVerificationsList.appendChild(card);
+                    });
+                } catch (error) {
+                    pendingVerificationsList.innerHTML = `<p style="color:red">Lỗi tải danh sách: ${error.message}</p>`;
+                }
+            }
+
+            async function openVerificationModal(userId) {
+                try {
+                    const users = await apiCall('/staff/verifications/pending');
+                    const user = users.find(u => u.userId == userId);
+                    if (!user) { showNotification('Không tìm thấy người dùng này trong danh sách chờ.', 'error'); return; }
+
+                    document.getElementById('verification-modal-title').textContent = `Chi tiết xác thực cho: ${user.fullName}`;
+                    const body = document.getElementById('verification-modal-body');
+                    body.innerHTML = `
+                    <div>
+                        <h4>Thông tin người dùng</h4>
+                        <ul class="spec-list">
+                            <li><strong>Họ tên:</strong><span>${user.fullName}</span></li>
+                            <li><strong>Email:</strong><span>${user.email}</span></li>
+                            <li><strong>SĐT:</strong><span>${user.phone}</span></li>
+                            <li><strong>Số CCCD:</strong><span>${user.cccd || 'Chưa nhập'}</span></li>
+                            <li><strong>Số GPLX:</strong><span>${user.gplx || 'Chưa nhập'}</span></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Hình ảnh giấy tờ</h4>
+                        <div class="verification-image-grid">
+                            ${createImageItem('CCCD Mặt 1', user.cccdPath1)}
+                            ${createImageItem('CCCD Mặt 2', user.cccdPath2)}
+                            ${createImageItem('GPLX Mặt 1', user.gplxPath1)}
+                            ${createImageItem('GPLX Mặt 2', user.gplxPath2)}
+                            ${createImageItem('Selfie', user.selfiePath)}
+                        </div>
+                    </div>
+                `;
+                    const actions = document.getElementById('verification-modal-actions');
+                    actions.innerHTML = `
+                    <button class="btn btn-success" id="approve-btn" data-user-id="${user.userId}">Duyệt</button>
+                    <button class="btn btn-danger" id="reject-btn" data-user-id="${user.userId}">Từ chối</button>
+                `;
+                    verificationModal.style.display = 'block';
+                } catch (error) {
+                    showNotification(`Lỗi khi mở chi tiết: ${error.message}`, 'error');
+                }
+            }
+
+            function createImageItem(label, path) {
+                if (!path) return '';
+                return `
+                <div class="verification-image-item">
+                    <a href="${API_BASE_URL}${path}" target="_blank">
+                        <img src="${API_BASE_URL}${path}" alt="${label}">
+                    </a>
+                    <span>${label}</span>
+                </div>`;
+            }
+
+            loadPendingVerificationsBtn.addEventListener('click', loadAndRenderVerifications);
+            pendingVerificationsList.addEventListener('click', e => {
+                if (e.target.classList.contains('view-verification-btn')) {
+                    openVerificationModal(e.target.dataset.userId);
+                }
+            });
+
+            document.getElementById('verification-modal-actions').addEventListener('click', async e => {
+                const userId = e.target.dataset.userId;
+                if (!userId) return;
+                const isApproved = e.target.id === 'approve-btn';
+                let reason = '';
+                if (!isApproved) {
+                    reason = prompt('Vui lòng nhập lý do từ chối:');
+                    if (!reason) { showNotification('Đã hủy hành động.', 'warning'); return; }
+                }
+                try {
+                    const data = await apiCall(`/staff/verifications/${userId}/process`, 'POST', { approved: isApproved, reason });
+                    showNotification(data.message, 'success');
+                    verificationModal.style.display = 'none';
+                    loadAndRenderVerifications();
+                } catch (error) {
+                    showNotification(`Xử lý thất bại: ${error.message}`, 'error');
+                }
+            });
+
+            forms.updateVehicle.addEventListener('submit', async (e) => { e.preventDefault(); try { const vehicleId = e.target['update-vehicle-id'].value; const data = await apiCall(`/staff/vehicles/${vehicleId}/details`, 'PUT', { batteryLevel: e.target['update-battery-level'].value || null, newCondition: e.target['update-condition'].value || null }); showNotification(data.message, 'success'); forms.updateVehicle.reset(); renderDashboard(); } catch (error) { showNotification(`Cập nhật xe thất bại: ${error.message}`, 'error'); } });
+            // MODIFIED: Submit listener updated to handle multiple damage report photos
+            forms.reportDamage.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const vehicleId = e.target['damage-vehicle-id'].value;
+                const formData = new FormData();
+                formData.append('description', e.target['damage-description'].value);
+
+                const photoFiles = e.target['damage-photo'].files;
+                if (photoFiles && photoFiles.length > 0) {
+                    for (const file of photoFiles) {
+                        formData.append('photos', file);
+                    }
+                }
+
+                try {
+                    const data = await apiCall(`/staff/vehicles/${vehicleId}/report-damage`, 'POST', formData);
+                    showNotification(data.message, 'success');
+                    forms.reportDamage.reset();
+                    renderDashboard(); // Refresh dashboard after reporting damage
+                } catch (error) {
+                    showNotification(`Báo cáo thất bại: ${error.message}`, 'error');
+                }
+            });
+
+            document.querySelectorAll('.close-modal').forEach(el => {
+                el.addEventListener('click', () => {
+                    el.closest('.modal').style.display = 'none';
+                });
+            });
+            window.onclick = (event) => {
+                if (event.target.classList.contains('modal')) {
+                    event.target.style.display = 'none';
+                }
+            };
+
+            function openQrModal(opts) {
+                const qrTitle = document.getElementById('qr-code-title');
+                const qrMessage = document.getElementById('qr-code-message');
+                const qrActions = document.getElementById('qr-code-actions');
+                const depositSection = document.getElementById('payment-info-section');
+                const depositAmountSpan = document.getElementById('deposit-amount-span');
+                const transferBookingIdSpan = document.getElementById('transfer-booking-id-span');
+
+                document.getElementById('qr-code-image').src = opts.qrCodeUrl || '';
+
+                const showPaymentInfo = (opts.mode === 'renter') || (opts.includePaymentInfo === true);
+
+                if (showPaymentInfo) {
+                    qrTitle.textContent = opts.mode === 'renter' ? 'Thanh toán cọc' : 'Thanh toán / Hướng dẫn chuyển khoản';
+                    qrMessage.innerHTML = opts.mode === 'renter' ? `Quý khách vui lòng quét mã QR để thanh toán cọc.` : `Vui lòng quét mã QR hoặc sử dụng thông tin chuyển khoản bên dưới để thu cọc.`;
+                    depositSection.style.display = '';
+                    depositAmountSpan.textContent = ((opts.depositAmount != null) ? opts.depositAmount : 500000).toLocaleString('vi-VN');
+                    transferBookingIdSpan.textContent = opts.bookingId || '';
+                } else {
+                    depositSection.style.display = 'none';
+                }
+
+                if (opts.mode === 'renter') {
+                    qrActions.innerHTML = `<p style="font-size:.9rem;color:var(--secondary-color)"><strong>Lưu ý:</strong> Quý khách thực hiện thanh toán qua ứng dụng ngân hàng bằng cách quét mã QR hoặc chuyển khoản theo hướng dẫn.</p>`;
+                } else {
+                    const pdfButtonHtml = opts.invoicePdfPath ? `<a href="${API_BASE_URL}${opts.invoicePdfPath}" target="_blank" class="btn btn-info btn-center" style="background-color:#17a2b8;color:white;margin-top:0.5rem;">Xem Hóa đơn PDF</a>` : '';
+                    // MODIFIED: Check-in photo input with 'multiple' attribute
+                    let confirmBtnHtml = '';
+                    // HIỂN THỊ NÚT CHO BƯỚC CHECK-IN
+                    if (opts.step === 'checkin') {
+                        confirmBtnHtml = `
+                                        <div class="form-group" style="text-align: left;">
+                                            <label for="checkin-photo">Ảnh tình trạng xe lúc giao (có thể chọn nhiều ảnh):</label>
+                                            <input type="file" id="checkin-photo" class="form-control" accept="image/*" required multiple>
+                                        </div>
+                                        <button id="confirm-cash-checkin" class="btn btn-success btn-center" data-booking-id="${opts.bookingId || ''}">Đã nhận tiền mặt</button>
+                                        `;
+                    } else if (opts.step === 'final') {
+                        confirmBtnHtml = `
+                                        <div style="margin-top: 1rem; border-top: 1px solid #ccc; padding-top: 1rem;">
+                                            <p style="font-weight: bold; font-size: 1.1rem;">Xác nhận thanh toán:</p>
+                                            <p style="font-size: 0.9rem; color: var(--secondary-color);">Sau khi khách hàng thanh toán xong, nhấn nút tương ứng để hoàn tất đơn hàng.</p>
+                                            <button id="confirm-final-transfer" class="btn btn-primary btn-center" data-booking-id="${opts.bookingId || ''}">Xác nhận đã nhận Chuyển khoản</button>
+                                            <button id="confirm-final-cash" class="btn btn-success btn-center" style="margin-top: 8px;" data-booking-id="${opts.bookingId || ''}">Xác nhận đã nhận Tiền mặt</button>
+                                        </div>
+                                        `;
+                    }
+
+                    qrActions.innerHTML = `
+                        <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-start;">
+                            ${confirmBtnHtml}
+                            ${pdfButtonHtml}
+                            <p style="font-size:.9rem;color:var(--secondary-color); margin:0;">
+                                <strong>Lưu ý:</strong> Bạn có thể sử dụng QR hoặc chuyển khoản theo thông tin bên trên. Nhân viên nên xác nhận sau khi nhận tiền.
+                            </p>
+                        </div>
+                    `;
+                }
+
+                modals.qrCode.style.display = 'block';
+            }
+
+            updateUI();
+        });
+    </script>
+</body>
+
+</html>
