@@ -1,0 +1,313 @@
+#define BLYNK_TEMPLATE_ID "TMPL6uL6oioEa"
+#define BLYNK_TEMPLATE_NAME "SmartHome"
+#define BLYNK_AUTH_TOKEN "YWgcx9RyKqxo_ShjyCx0xtvKVh_uzL4F"
+
+
+#define WIFI_SSID "SmartHomeG4"
+#define WIFI_PASS "88888888"
+
+#include <WiFi.h>
+#include <Wire.h>
+#include <RTClib.h>
+#include <LiquidCrystal.h>
+#include <EEPROM.h>
+#include <DHT.h>
+#include <BlynkSimpleEsp32.h>
+#include <time.h>
+
+#define DHTPIN 16
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+
+LiquidCrystal lcd(14, 27, 26, 25, 33, 32);
+RTC_DS3231 rtc; 
+
+#define buzzerPin       23
+#define fanPin          5
+#define livingLedPin    4
+#define garageLedPin    15
+#define bathroomLedPin  0
+#define buttonPin       19
+#define buttonGaragePin 13
+#define buttonFanPin    2
+#define gasSensorPin    35
+#define trigEchoPin     17
+#define trigechopin     18
+
+bool livingLedState = false;
+bool garageLedState = false;
+bool fanState = false;
+bool autoMode = true;
+bool bathroomLedState = false;
+bool lastButtonState = HIGH;
+bool lastButtonGarageState = HIGH;
+bool lastButtonFanState = HIGH;
+bool rtcWorking = true;
+
+#define EEPROM_SIZE 2
+#define LED_ADDR 0
+#define AUTO_ADDR 1
+
+unsigned long thoigian = 0;
+unsigned long echoTime = 0;
+
+int eveningStartHour = 18;
+int eveningStartMinute = 0;
+int eveningEndHour = 5;
+int eveningEndMinute = 0;
+
+const char* ntpServer = "pool.ntp.org";
+const long gmtOffset_sec = 7 * 3600;
+const int daylightOffset_sec = 0;
+
+DateTime getCurrentTime() {
+  if (rtcWorking) {
+    return rtc.now();
+  } else {
+    time_t now;
+    struct tm timeinfo;
+    time(&now);
+    localtime_r(&now, &timeinfo);
+    return DateTime(timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, timeinfo.tm_mday,
+                    timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+  }
+}
+
+void setup() {
+  Serial.begin(9600);
+  lcd.begin(16, 2);
+  Wire.begin(21, 22);
+  dht.begin();
+
+  pinMode(livingLedPin, OUTPUT);
+  pinMode(garageLedPin, OUTPUT);
+  pinMode(fanPin, OUTPUT);
+  pinMode(bathroomLedPin, OUTPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(buttonGaragePin, INPUT_PULLUP);
+  pinMode(buttonFanPin, INPUT_PULLUP);
+  pinMode(trigEchoPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+  pinMode(gasSensorPin, INPUT);
+  pinMode(trigechopin, OUTPUT);
+  analogReadResolution(12);
+  analogSetAttenuation(ADC_11db);
+
+  EEPROM.begin(EEPROM_SIZE);
+  livingLedState = EEPROM.read(LED_ADDR);
+  autoMode = EEPROM.read(AUTO_ADDR);
+
+  if (!rtc.begin()) {
+    rtcWorking = false;
+    Serial.println("RTC FAILED! Switching to NTP time...");
+    lcd.clear(); lcd.print("RTC ERROR"); delay(3000);
+  } else {
+    Serial.println("RTC OK");
+  }
+
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  unsigned long startAttemptTime = millis();
+  while (WiFi.status() != WL_CONNECTED && millis() - startAttemptTime < 10000) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("\nWiFi connected");
+    if (!rtcWorking) {
+      configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+      Serial.println("NTP configured.");
+    }
+    Blynk.config(BLYNK_AUTH_TOKEN);
+    Blynk.connect(5000);
+  } else {
+    Serial.println("\nWiFi NOT connected. Offline mode.");
+  }
+
+  Blynk.virtualWrite(V1, livingLedState);
+  Blynk.virtualWrite(V2, garageLedState);
+  Blynk.virtualWrite(V3, fanState);
+  Blynk.virtualWrite(V4, autoMode);
+}
+
+long readDistanceCM() {
+  pinMode(trigEchoPin, OUTPUT);
+  digitalWrite(trigEchoPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigEchoPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigEchoPin, LOW);
+  pinMode(trigEchoPin, INPUT);
+  thoigian = pulseIn(trigEchoPin, HIGH, 20000);
+  return thoigian * 0.034 / 2;
+}
+
+void handleBathroomSensor() {
+  float distance = readDistanceCM();
+  if (distance > 0 && distance < 7) {
+    if (!bathroomLedState) {
+      bathroomLedState = true;
+      digitalWrite(bathroomLedPin, HIGH);
+    }
+  } else {
+    if (bathroomLedState) {
+      bathroomLedState = false;
+      digitalWrite(bathroomLedPin, LOW);
+    }
+  }
+}
+
+long readCM() {
+  pinMode(trigechopin, OUTPUT);
+  digitalWrite(trigechopin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigechopin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigechopin, LOW);
+  pinMode(trigechopin, INPUT);
+  echoTime = pulseIn(trigechopin, HIGH, 20000);
+  return echoTime * 0.034 / 2;
+}
+
+bool isSomeonePresentLiv() {
+  long distance = readCM();
+  delay(50);
+  return distance > 1 && distance < 10;
+}
+
+float readTemperature() {
+  float temp = dht.readTemperature();
+  if (isnan(temp)) return 0.0;
+  return temp;
+}
+
+int readGasLevel() {
+  return analogRead(gasSensorPin);
+}
+
+bool isGasDetected() {
+  return readGasLevel() > 900;
+}
+
+void displayStatus(DateTime now, bool led, bool autoM, float temp) {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print(autoM ? "AUTO" : "MANUAL");
+  lcd.print(led ? " LED ON" : " LED OFF");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Temp:");
+  lcd.print(temp, 1);
+  lcd.print("C ");
+  lcd.print(now.hour() < 10 ? "0" : ""); lcd.print(now.hour());
+  lcd.print(":");
+  lcd.print(now.minute() < 10 ? "0" : ""); lcd.print(now.minute());
+}
+
+BLYNK_WRITE(V1) { livingLedState = param.asInt(); }
+BLYNK_WRITE(V2) { garageLedState = param.asInt(); }
+BLYNK_WRITE(V3) { fanState = param.asInt(); }
+BLYNK_WRITE(V4) { autoMode = param.asInt(); }
+BLYNK_WRITE(V5) { eveningStartHour = param.asInt(); }
+BLYNK_WRITE(V6) { eveningEndHour = param.asInt(); }
+BLYNK_WRITE(V7) { eveningStartMinute = param.asInt(); }
+BLYNK_WRITE(V8) { eveningEndMinute = param.asInt(); }
+BLYNK_CONNECTED() {
+  Blynk.sendInternal("rtc", "sync");
+}
+BLYNK_WRITE(InternalPinRTC) {
+  long t = param.asLong();
+  if (rtcWorking && t) {
+    DateTime now(t);
+    rtc.adjust(now);
+  }
+}
+
+void loop() {
+  if (WiFi.status() == WL_CONNECTED && Blynk.connected()) {
+    Blynk.run();
+  }
+
+  DateTime now = getCurrentTime();
+  float tempC = readTemperature();
+  bool someone = isSomeonePresentLiv();
+
+  int nowMinutes = now.hour() * 60 + now.minute();
+  int startMinutes = eveningStartHour * 60 + eveningStartMinute;
+  int endMinutes = eveningEndHour * 60 + eveningEndMinute;
+
+  bool inEvening = false;
+  if (startMinutes == endMinutes) {
+    inEvening = false;
+  } else if (startMinutes < endMinutes) {
+    inEvening = (nowMinutes >= startMinutes && nowMinutes < endMinutes);
+  } else {
+    inEvening = (nowMinutes >= startMinutes || nowMinutes < endMinutes);
+  }
+
+  if (autoMode) {
+    if (inEvening && someone) {
+      livingLedState = true;
+      Blynk.virtualWrite(V1, livingLedState);
+    }
+  }
+
+  Serial.println("================");
+  Serial.println(someone ? "đang có người" : "đang k có người");
+  Serial.println(inEvening ? "trời đang tối" : "trời đang k tối");
+  int gasValue = readGasLevel();
+  Serial.println("Giá trị khí gas: " + String(gasValue));
+  Blynk.virtualWrite(V0, tempC);
+
+  if (isGasDetected() && gasValue < 4095) {
+    lcd.clear(); lcd.setCursor(0, 0); lcd.print("CANH BAO KHI GA!");
+    digitalWrite(buzzerPin, HIGH);
+    delay(5500);
+  } else {
+    digitalWrite(buzzerPin, LOW);
+    displayStatus(now, livingLedState, autoMode, tempC);
+  }
+
+  if (digitalRead(buttonPin) == LOW && lastButtonState == HIGH) {
+    livingLedState = !livingLedState;
+    Blynk.virtualWrite(V1, livingLedState);
+  }
+  lastButtonState = digitalRead(buttonPin);
+
+  if (digitalRead(buttonGaragePin) == LOW && lastButtonGarageState == HIGH) {
+    garageLedState = !garageLedState;
+    Blynk.virtualWrite(V2, garageLedState);
+  }
+  lastButtonGarageState = digitalRead(buttonGaragePin);
+
+  if (digitalRead(buttonFanPin) == LOW && lastButtonFanState == HIGH) {
+    fanState = !fanState;
+    Blynk.virtualWrite(V3, fanState);
+  }
+  lastButtonFanState = digitalRead(buttonFanPin);
+
+  if (autoMode) {
+    if (someone && tempC > 29.0) {
+      fanState = true;
+      Blynk.virtualWrite(V3, fanState);
+    }
+  }
+
+  handleBathroomSensor();
+
+  digitalWrite(livingLedPin, livingLedState);
+  digitalWrite(garageLedPin, garageLedState);
+  digitalWrite(fanPin, fanState);
+
+  if (EEPROM.read(LED_ADDR) != livingLedState) {
+    EEPROM.write(LED_ADDR, livingLedState); EEPROM.commit();
+  }
+  if (EEPROM.read(AUTO_ADDR) != autoMode) {
+    EEPROM.write(AUTO_ADDR, autoMode); EEPROM.commit();
+  }
+
+  delay(300);
+}
+
+
+
